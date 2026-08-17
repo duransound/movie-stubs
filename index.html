@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Two-Person Picture Show</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=VT323&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <header class="masthead">
+    <div class="masthead-inner">
+      <p class="eyebrow">Now showing at home</p>
+      <h1 class="title">Two-Person Picture Show</h1>
+      <p class="subtitle">Every movie we've watched together, stamped, torn, and filed as a ticket stub.</p>
+      <nav class="masthead-nav">
+        <a href="add.html">+ Add a ticket</a>
+        <a href="watchlist.html">Coming attractions</a>
+        <a href="stats.html">Box Office Report</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <section class="controls" aria-label="Filter and sort">
+      <input type="search" id="search" placeholder="Search titles..." aria-label="Search titles" />
+
+      <select id="sort" aria-label="Sort tickets">
+        <option value="date-desc">Newest first</option>
+        <option value="date-asc">Oldest first</option>
+        <option value="avg-desc">Highest rated</option>
+        <option value="avg-asc">Lowest rated</option>
+        <option value="disagree-desc">Biggest disagreement</option>
+      </select>
+
+      <div class="stats" id="stats" aria-live="polite"></div>
+    </section>
+
+    <section id="grid" class="grid" aria-label="Movie tickets"></section>
+
+    <p id="empty-state" class="empty-state" hidden>
+      No stubs match "<span id="empty-query"></span>." Try a different title.
+    </p>
+
+  </main>
+
+  <script src="config.public.js"></script>
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Box Office Report — Two-Person Picture Show</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=VT323&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <header class="masthead">
+    <div class="masthead-inner">
+      <p class="eyebrow">Weekend numbers</p>
+      <h1 class="title">Box Office Report</h1>
+      <p class="subtitle">The stats behind every ticket we've torn.</p>
+      <nav class="masthead-nav">
+        <a href="index.html">&larr; Back to the wall</a>
+        <a href="add.html">+ Add a ticket</a>
+        <a href="watchlist.html">Coming attractions</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <p id="report-empty" class="empty-state" hidden>
+      No tickets yet — add a few on the <a href="add.html">add a ticket</a> page and this report fills in.
+    </p>
+
+    <div id="report-body" hidden>
+
+      <section class="stat-tiles" id="stat-tiles" aria-label="Headline numbers"></section>
+
+      <section class="report-section">
+        <h2 class="report-heading">Tickets by year</h2>
+        <div class="chart-bars" id="year-chart"></div>
+      </section>
+
+      <section class="report-section">
+        <h2 class="report-heading">Mollie vs. Ian, by year</h2>
+        <div class="chart-legend" id="rater-legend"></div>
+        <div class="chart-bars chart-bars-paired" id="rater-chart"></div>
+      </section>
+
+      <section class="report-section report-cols">
+        <div>
+          <h2 class="report-heading">Biggest disagreements</h2>
+          <ol class="leaderboard" id="disagree-list"></ol>
+        </div>
+        <div>
+          <h2 class="report-heading">Most in sync</h2>
+          <ol class="leaderboard" id="agree-list"></ol>
+        </div>
+      </section>
+
+      <section class="report-section" id="genre-section" hidden>
+        <h2 class="report-heading">Genres we watch most</h2>
+        <div class="chart-bars" id="genre-chart"></div>
+      </section>
+
+      <section class="report-section" id="director-section" hidden>
+        <h2 class="report-heading">Directors we keep coming back to</h2>
+        <ul class="director-list" id="director-list"></ul>
+      </section>
+
+    </div>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>Pulled live from <code>data/movies.json</code> — genres and directors need an OMDb key in <code>config.public.js</code>.</p>
+  </footer>
+
+  <script src="config.public.js"></script>
+  <script src="config.js"></script>
+  <script src="stats.js"></script>
+</body>
+</html>

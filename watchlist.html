@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Coming attractions — Two-Person Picture Show</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=VT323&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <header class="masthead">
+    <div class="masthead-inner">
+      <p class="eyebrow">Coming soon</p>
+      <h1 class="title">Coming Attractions</h1>
+      <p class="subtitle">The queue — movies we haven't watched together yet.</p>
+      <nav class="masthead-nav">
+        <a href="index.html">&larr; Back to the wall</a>
+        <a href="add.html">+ Add a ticket</a>
+        <a href="stats.html">Box Office Report</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <form class="form-card" id="watch-add-form">
+      <div class="form-row">
+        <label for="watch-title">Title</label>
+        <input type="text" id="watch-title" placeholder="Poor Things" />
+        <div class="lookup-row">
+          <button type="button" class="btn secondary" id="watch-lookup-btn" style="color: var(--text-on-paper); border-color: var(--paper-shadow);">Look up on OMDb</button>
+          <span class="lookup-status" id="watch-lookup-status"></span>
+        </div>
+        <div class="lookup-results" id="watch-lookup-results" hidden></div>
+      </div>
+
+      <div class="form-row">
+        <label for="watch-year">Year</label>
+        <input type="number" id="watch-year" placeholder="2023" />
+      </div>
+
+      <p class="form-error" id="watch-form-error" hidden></p>
+
+      <div class="form-actions">
+        <button type="submit" class="btn" id="watch-add-btn">Add</button>
+      </div>
+
+      <p class="publish-status" id="watch-publish-status"></p>
+    </form>
+
+    <section class="controls" aria-label="Filter" style="margin-top: 2.5rem;">
+      <input type="search" id="watch-search" placeholder="Search titles..." aria-label="Search titles" />
+      <div class="stats" id="watch-stats" aria-live="polite"></div>
+    </section>
+
+    <section id="watch-grid" class="grid watch-grid" aria-label="Movies we want to see"></section>
+
+    <p id="watch-empty-state" class="empty-state" hidden>
+      No matches for "<span id="watch-empty-query"></span>." Try a different title.
+    </p>
+
+  </main>
+
+  <footer class="site-footer">
+    <p>Watched one? Hit <strong>Log this</strong> on its card to jump straight to the add form.</p>
+  </footer>
+
+  <script src="config.public.js"></script>
+  <script src="config.js"></script>
+  <script src="watchlist.js"></script>
+</body>
+</html>

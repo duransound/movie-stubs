@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Add a ticket — Two-Person Picture Show</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=VT323&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <header class="masthead">
+    <div class="masthead-inner">
+      <p class="eyebrow">Box office</p>
+      <h1 class="title">Add a ticket</h1>
+      <p class="subtitle">Fill this out after you watch something — hitting Add commits it straight to GitHub.</p>
+      <nav class="masthead-nav">
+        <a href="index.html">&larr; Back to the wall</a>
+        <a href="watchlist.html">Coming attractions</a>
+        <a href="stats.html">Box Office Report</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <p class="helper-text">
+      Fill this out after you watch something, then hit <strong>Add</strong> —
+      it commits straight to <code>data/movies.json</code> on GitHub.
+    </p>
+
+    <form class="form-card" id="ticket-form">
+      <div class="form-row">
+        <label for="title">Title</label>
+        <input type="text" id="title" placeholder="Paddington 2" />
+        <div class="lookup-row">
+          <button type="button" class="btn secondary" id="lookup-btn" style="color: var(--text-on-paper); border-color: var(--paper-shadow);">Look up on OMDb</button>
+          <span class="lookup-status" id="lookup-status"></span>
+        </div>
+        <div class="lookup-results" id="lookup-results" hidden></div>
+        <img class="poster-preview" id="poster-preview" hidden alt="Poster preview" />
+      </div>
+
+      <div class="form-cols">
+        <div class="form-row">
+          <label for="year">Year</label>
+          <input type="number" id="year" placeholder="2017" />
+        </div>
+        <div class="form-row">
+          <label for="watchedDate">Date watched</label>
+          <input type="date" id="watchedDate" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="venue">Venue (optional)</label>
+        <input type="text" id="venue" placeholder="Couch, blanket fort" />
+      </div>
+
+      <div class="form-row">
+        <label>Mollie's rating</label>
+        <div class="star-input" data-rater="mollie">
+          <span class="star-track"></span>
+          <span class="rating-readout">0.0</span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label>Ian's rating</label>
+        <div class="star-input" data-rater="ian">
+          <span class="star-track"></span>
+          <span class="rating-readout">0.0</span>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="note">Note (optional)</label>
+        <textarea id="note" placeholder="One line you'll want to remember about the night."></textarea>
+      </div>
+
+      <p class="form-error" id="form-error" hidden></p>
+
+      <div class="form-actions">
+        <button type="submit" class="btn" id="add-btn">Add</button>
+      </div>
+
+      <p class="publish-status" id="publish-status"></p>
+    </form>
+
+  </main>
+
+
+  <script src="config.public.js"></script>
+  <script src="config.js"></script>
+  <script src="add.js"></script>
+</body>
+</html>

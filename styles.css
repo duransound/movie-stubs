@@ -1314,6 +1314,57 @@ a {
   cursor: pointer;
 }
 
+[data-theme="classic"] .ticket-plot {
+  font-family: "Anonymous Pro", "VT323", monospace;
+  font-size: 0.82rem;
+}
+
+/* VHS tracking glitch — mostly still, like a tape playing cleanly, but
+   every few seconds a quick tracking hiccup rolls through: the masthead
+   jitters horizontally and a band of scanline noise sweeps past, like a
+   worn rental tape momentarily losing sync before correcting itself. */
+[data-theme="classic"] .masthead {
+  position: relative;
+  overflow: hidden;
+  animation: classic-vhs-jitter 7s steps(1) infinite;
+}
+
+[data-theme="classic"] .masthead::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 18px;
+  top: -20%;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.5) 0px,
+    rgba(255, 255, 255, 0.5) 1px,
+    transparent 1px,
+    transparent 3px
+  );
+  opacity: 0;
+  z-index: 2;
+  pointer-events: none;
+  animation: classic-vhs-tracking-band 7s linear infinite;
+}
+
+@keyframes classic-vhs-jitter {
+  0%, 96%, 100% { transform: translateX(0); }
+  96.5% { transform: translateX(-6px); }
+  97% { transform: translateX(4px); }
+  97.5% { transform: translateX(-2px); }
+  98% { transform: translateX(0); }
+}
+
+@keyframes classic-vhs-tracking-band {
+  0%, 95% { top: -20%; opacity: 0; }
+  96% { top: 30%; opacity: 0.8; }
+  97% { top: 55%; opacity: 0.6; }
+  98% { top: 80%; opacity: 0.8; }
+  99%, 100% { top: 120%; opacity: 0; }
+}
+
 /* ============================================================
    THEME: SoCal 80s Computer
    Dark "screen" surfaces + a single amber phosphor voice for text —
@@ -1338,11 +1389,32 @@ a {
     radial-gradient(circle at 80% 90%, rgba(255, 46, 136, 0.05), transparent 40%);
 }
 
+/* CRT terminal treatment: a real full-screen repeating scanline texture
+   (not a single sweeping beam) laid directly over the sunset gradient,
+   a steps() brightness flicker like an aging monitor, and a pulsing
+   amber glow (via box-shadow, a separate property from filter) that
+   reads as light bleeding through from behind the scanlines. */
 [data-theme="socal"] .masthead {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(to bottom, #3A1730 0%, #C2577A 45%, #F0A97E 75%, #FFD36E 100%);
+  background:
+    repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0.4) 0px, rgba(0, 0, 0, 0.4) 1px, transparent 1px, transparent 3px),
+    linear-gradient(to bottom, #3A1730 0%, #C2577A 45%, #F0A97E 75%, #FFD36E 100%);
   border-bottom: 6px solid var(--maroon-dark);
+  animation: socal-crt-flicker 4s steps(1) infinite, socal-crt-glow 3s ease-in-out infinite;
+}
+
+@keyframes socal-crt-flicker {
+  0%, 78%, 100% { filter: brightness(1); }
+  80% { filter: brightness(0.9); }
+  82% { filter: brightness(1); }
+  90% { filter: brightness(0.93); }
+  91% { filter: brightness(1); }
+}
+
+@keyframes socal-crt-glow {
+  0%, 100% { box-shadow: inset 0 0 60px rgba(255, 159, 110, 0.25); }
+  50% { box-shadow: inset 0 0 100px rgba(255, 159, 110, 0.55); }
 }
 
 [data-theme="socal"] .masthead::before {
@@ -1443,6 +1515,63 @@ a {
   [data-theme="socal"] .masthead-inner::after {
     display: none;
   }
+}
+
+/* Press Start 2P on the ticket's label text too, for the full computer-
+   terminal identity — but it's a pixel font with wide glyphs, so every
+   size here is scaled well down from the VT323 defaults to avoid
+   overflowing the narrow stub column or wrapping mid-word. */
+[data-theme="socal"] .ticket-header {
+  font-family: "Press Start 2P", "Anton", sans-serif;
+  font-size: 0.62rem;
+  line-height: 1.7;
+}
+
+[data-theme="socal"] .stub-serial {
+  font-family: "Press Start 2P", "Anton", sans-serif;
+  font-size: 0.5rem;
+}
+
+[data-theme="socal"] .stub-admit {
+  font-family: "Press Start 2P", "Anton", sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.05em;
+}
+
+[data-theme="socal"] .stub-avg {
+  font-family: "Press Start 2P", "Anton", sans-serif;
+  font-size: 0.85rem;
+}
+
+[data-theme="socal"] .ticket-credits {
+  font-family: "Press Start 2P", "Anton", sans-serif;
+  font-size: 0.55rem;
+  line-height: 1.8;
+}
+
+[data-theme="socal"] .ticket-fields {
+  font-family: "Press Start 2P", "Anton", sans-serif;
+  font-size: 0.58rem;
+  line-height: 1.9;
+}
+
+[data-theme="socal"] .note {
+  font-family: "Press Start 2P", "Anton", sans-serif;
+  font-size: 0.55rem;
+  line-height: 1.8;
+}
+
+[data-theme="socal"] .rating-value {
+  font-family: "Press Start 2P", "Anton", sans-serif;
+  font-size: 0.55rem;
+}
+
+[data-theme="socal"] .ticket-plot {
+  /* Share Tech Mono — a readable computer-terminal monospace, unlike
+     Press Start 2P it holds up across full paragraphs, so the whole
+     ticket keeps feeling like it's rendered on a screen. */
+  font-family: "Share Tech Mono", "VT323", monospace;
+  font-size: 0.82rem;
 }
 
 [data-theme="socal"] .ticket,
@@ -1598,6 +1727,10 @@ a {
   border-bottom: 4px double var(--maroon);
 }
 
+/* Slow sunburst rotation — the gold radiating fan behind the title turns
+   continuously and gradually, like a searchlight beam sweeping a gala
+   movie-palace premiere. Deliberately slow (40s/rotation) so it reads as
+   stately motion, not a spinning gimmick. */
 [data-theme="artdeco"] .masthead::before {
   content: "";
   position: absolute;
@@ -1605,7 +1738,6 @@ a {
   top: -30%;
   width: 900px;
   height: 900px;
-  transform: translateX(-50%);
   background-image: repeating-conic-gradient(
     from 0deg,
     rgba(201, 162, 39, 0.14) 0deg 3deg,
@@ -1613,6 +1745,12 @@ a {
   );
   border-radius: 50%;
   z-index: 0;
+  animation: artdeco-sunburst-rotate 40s linear infinite;
+}
+
+@keyframes artdeco-sunburst-rotate {
+  from { transform: translateX(-50%) rotate(0deg); }
+  to { transform: translateX(-50%) rotate(360deg); }
 }
 
 [data-theme="artdeco"] .masthead-inner {
@@ -1687,6 +1825,27 @@ a {
   z-index: 1;
 }
 
+[data-theme="artdeco"] .ticket-header,
+[data-theme="artdeco"] .stub-serial,
+[data-theme="artdeco"] .stub-admit,
+[data-theme="artdeco"] .stub-avg,
+[data-theme="artdeco"] .ticket-credits,
+[data-theme="artdeco"] .ticket-fields,
+[data-theme="artdeco"] .note,
+[data-theme="artdeco"] .rating-value {
+  /* Special Elite reads like a worn 1930s office typewriter — the
+     ribbon-and-ink texture a real Deco-era ticket stub would've been
+     typed on, in place of the shared dot-matrix VT323. */
+  font-family: "Special Elite", "VT323", monospace;
+}
+
+[data-theme="artdeco"] .ticket-plot {
+  /* Crimson Text — an old-style book serif, the kind of body copy a
+     1930s newspaper or magazine review column would have run. */
+  font-family: "Crimson Text", Georgia, serif;
+  font-size: 0.9rem;
+}
+
 /* ============================================================
    THEME: 1950s Vintage
    Diner pastels — cream ticket stock, coral ink, a turquoise page
@@ -1709,6 +1868,8 @@ a {
   padding-bottom: 2.5rem;
 }
 
+/* Drive-in awning — the scalloped edge itself flutters, a gentle skew +
+   scale wobble like real canvas awning fabric moving in a breeze. */
 [data-theme="vintage50s"] .masthead::after {
   content: "";
   position: absolute;
@@ -1718,9 +1879,32 @@ a {
   height: 24px;
   background: radial-gradient(circle at 12px 0, transparent 12px, #fdf6e3 12.5px) repeat-x;
   background-size: 24px 24px;
+  transform-origin: top center;
+  animation: vintage50s-awning-flutter 4.5s ease-in-out infinite;
 }
 
-[data-theme="vintage50s"] .eyebrow,
+@keyframes vintage50s-awning-flutter {
+  0%, 100% { transform: skewX(0deg) scaleY(1) translateY(0); }
+  25% { transform: skewX(2.5deg) scaleY(1.35) translateY(3px); }
+  50% { transform: skewX(0deg) scaleY(0.85) translateY(0); }
+  75% { transform: skewX(-2.5deg) scaleY(1.35) translateY(3px); }
+}
+
+/* Neon sign flicker — the title occasionally dips brightness like a
+   diner/marquee neon tube warming up, a quick stutter rather than a
+   smooth pulse. steps(1) keeps each dip an instant on/off snap. */
+[data-theme="vintage50s"] .masthead .title {
+  animation: vintage50s-neon-flicker 6s steps(1) infinite;
+}
+
+@keyframes vintage50s-neon-flicker {
+  0%, 91%, 100% { opacity: 1; text-shadow: 2px 2px 0 #ff6f61; }
+  92% { opacity: 0.4; text-shadow: none; }
+  93% { opacity: 1; text-shadow: 2px 2px 0 #ff6f61; }
+  94% { opacity: 0.6; text-shadow: none; }
+  95% { opacity: 1; text-shadow: 2px 2px 0 #ff6f61; }
+}
+
 [data-theme="vintage50s"] .title,
 [data-theme="vintage50s"] .movie-title,
 [data-theme="vintage50s"] .watch-title,
@@ -1728,7 +1912,30 @@ a {
 [data-theme="vintage50s"] .price,
 [data-theme="vintage50s"] .leaderboard-rank,
 [data-theme="vintage50s"] .report-heading {
-  font-family: "Alfa Slab One", "Anton", sans-serif;
+  /* Original Surfer — a rounded, bouncy poolside/surf-shop hand-lettered
+     look, closer to a beach postcard or malt-shop soda label than a
+     straight diner-sign slab. */
+  font-family: "Original Surfer", "Alfa Slab One", "Anton", sans-serif;
+}
+
+[data-theme="vintage50s"] .ticket-header,
+[data-theme="vintage50s"] .stub-serial,
+[data-theme="vintage50s"] .stub-admit,
+[data-theme="vintage50s"] .stub-avg,
+[data-theme="vintage50s"] .ticket-credits,
+[data-theme="vintage50s"] .ticket-fields,
+[data-theme="vintage50s"] .note,
+[data-theme="vintage50s"] .rating-value {
+  /* Real IBM Courier launched in 1955 — dead center of this decade.
+     Clean, businesslike typewriter monospace, in place of VT323. */
+  font-family: "Courier Prime", "VT323", monospace;
+}
+
+[data-theme="vintage50s"] .ticket-plot {
+  /* Lora — a warm, rounded serif with mid-century book/magazine
+     body-copy character, friendlier than a straight news serif. */
+  font-family: "Lora", Georgia, serif;
+  font-size: 0.9rem;
 }
 
 [data-theme="vintage50s"] .title {
@@ -1737,6 +1944,12 @@ a {
 }
 
 [data-theme="vintage50s"] .eyebrow {
+  /* Pacifico is a brush script — paired with the slab title the way
+     50s diner branding pairs a script logo with bold sign lettering
+     (malt-shop menus, drive-in marquees). */
+  font-family: "Pacifico", cursive;
+  font-size: 1.15rem;
+  letter-spacing: 0.04em;
   color: #fff;
   opacity: 0.85;
 }
@@ -1814,6 +2027,11 @@ a {
   background: var(--maroon-dark);
 }
 
+/* Psychedelic swirl — the concentric rings slowly cycle hue (a
+   Haight-Ashbury concert-poster color-shift) while independently
+   breathing in opacity. Two separate keyframes on two separate
+   properties (filter vs. opacity) so they layer instead of fighting
+   over the same property. */
 [data-theme="midcentury"] .masthead::before {
   content: "";
   position: absolute;
@@ -1826,6 +2044,7 @@ a {
     radial-gradient(circle, transparent 0 120px, #cc6b3c 120px 128px, transparent 128px 160px,
       #7a8c5a 160px 168px, transparent 168px 200px, #e0a83c 200px 208px, transparent 208px);
   z-index: 0;
+  animation: midcentury-hue-shift 12s linear infinite, midcentury-ring-pulse 5s ease-in-out infinite;
 }
 
 [data-theme="midcentury"] .masthead::after {
@@ -1840,6 +2059,17 @@ a {
     radial-gradient(circle, transparent 0 90px, #e0a83c 90px 98px, transparent 98px 130px,
       #cc6b3c 130px 138px, transparent 138px);
   z-index: 0;
+  animation: midcentury-hue-shift 12s linear infinite reverse, midcentury-ring-pulse 5s ease-in-out infinite 1.5s;
+}
+
+@keyframes midcentury-hue-shift {
+  from { filter: hue-rotate(0deg); }
+  to { filter: hue-rotate(360deg); }
+}
+
+@keyframes midcentury-ring-pulse {
+  0%, 100% { opacity: 0.75; }
+  50% { opacity: 1; }
 }
 
 [data-theme="midcentury"] .masthead-inner {
@@ -1884,6 +2114,26 @@ a {
 
 [data-theme="midcentury"] .theme-picker {
   color: #d8c9a3;
+}
+
+[data-theme="midcentury"] .ticket-header,
+[data-theme="midcentury"] .stub-serial,
+[data-theme="midcentury"] .stub-admit,
+[data-theme="midcentury"] .stub-avg,
+[data-theme="midcentury"] .ticket-credits,
+[data-theme="midcentury"] .ticket-fields,
+[data-theme="midcentury"] .note,
+[data-theme="midcentury"] .rating-value {
+  /* Space Mono carries 60s American space-age type design — quirky,
+     geometric monospace that reads as Mod/futurist rather than office
+     typewriter, a nice foil to the swirly psychedelic header. */
+  font-family: "Space Mono", "VT323", monospace;
+}
+
+[data-theme="midcentury"] .ticket-plot {
+  /* Jost — a geometric sans with Bauhaus/modernist roots, the same
+     design lineage that fed 60s Mod and space-age graphics. */
+  font-family: "Jost", "Work Sans", sans-serif;
 }
 
 [data-theme="midcentury"] .ticket,
@@ -1964,22 +2214,60 @@ a {
   border-color: var(--maroon);
 }
 
+/* Grindhouse film-stock treatment, three independent layers: the whole
+   masthead flickers brightness like an old projector bulb (steps(1) so
+   it snaps rather than glides); the grain texture itself jitters between
+   offsets (also steps(), like real film grain jumping frame to frame,
+   not a smooth scroll); and a warm light-leak blob drifts slowly across,
+   like a leaky camera back on a roll of expired film. */
 [data-theme="cinematic70s"] .masthead {
   position: relative;
   overflow: hidden;
   background:
     radial-gradient(ellipse at 50% 30%, rgba(224, 123, 57, 0.25), transparent 60%),
     var(--maroon-dark);
+  animation: cinematic70s-projector-flicker 5s steps(1) infinite;
 }
 
 [data-theme="cinematic70s"] .masthead::before {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: -20px;
   opacity: 0.35;
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
   z-index: 0;
+  animation: cinematic70s-grain-shift 0.4s steps(4) infinite;
+}
+
+[data-theme="cinematic70s"] .masthead::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(ellipse 260px 180px at 20% 40%, rgba(255, 170, 90, 0.35), transparent 70%);
+  animation: cinematic70s-light-leak 14s ease-in-out infinite;
+}
+
+@keyframes cinematic70s-projector-flicker {
+  0%, 84%, 100% { filter: brightness(1); }
+  86% { filter: brightness(0.88); }
+  88% { filter: brightness(1.06); }
+  90% { filter: brightness(0.94); }
+  92% { filter: brightness(1); }
+}
+
+@keyframes cinematic70s-grain-shift {
+  0% { background-position: 0 0; }
+  25% { background-position: -15px 8px; }
+  50% { background-position: 10px -12px; }
+  75% { background-position: -8px -6px; }
+  100% { background-position: 0 0; }
+}
+
+@keyframes cinematic70s-light-leak {
+  0%, 100% { transform: translate(0, 0); opacity: 0.7; }
+  50% { transform: translate(60%, 20%); opacity: 1; }
 }
 
 [data-theme="cinematic70s"] .masthead-inner {
@@ -2022,6 +2310,26 @@ a {
 [data-theme="cinematic70s"] .masthead-nav a:hover {
   background: var(--maroon);
   color: var(--maroon-dark);
+}
+
+[data-theme="cinematic70s"] .ticket-header,
+[data-theme="cinematic70s"] .stub-serial,
+[data-theme="cinematic70s"] .stub-admit,
+[data-theme="cinematic70s"] .stub-avg,
+[data-theme="cinematic70s"] .ticket-credits,
+[data-theme="cinematic70s"] .ticket-fields,
+[data-theme="cinematic70s"] .note,
+[data-theme="cinematic70s"] .rating-value {
+  /* Overpass Mono has highway-signage roots — a stamped, utilitarian
+     monospace closer to grindhouse credit blocks than an office
+     typewriter, and distinct from the 30s/50s typewriter choices. */
+  font-family: "Overpass Mono", "VT323", monospace;
+}
+
+[data-theme="cinematic70s"] .ticket-plot {
+  /* Nunito — rounded terminals give it a warm, casual 70s paperback
+     feel, softer than the utilitarian Overpass Mono labels above. */
+  font-family: "Nunito", "Work Sans", sans-serif;
 }
 
 [data-theme="cinematic70s"] .ticket,

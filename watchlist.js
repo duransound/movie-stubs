@@ -152,7 +152,7 @@ document.getElementById("watch-lookup-btn").addEventListener("click", async () =
   const key = getOmdbKey();
 
   if (!title) return setWatchLookupStatus("Enter a title first.", true);
-  if (!key) return setWatchLookupStatus("No OMDb key configured — see config.js.", true);
+  if (!key) return setWatchLookupStatus("No OMDb key configured — see config.public.js.", true);
 
   setWatchLookupStatus("Searching…");
   clearWatchLookupResults();
@@ -198,7 +198,7 @@ document.getElementById("watch-add-form").addEventListener("submit", (e) => {
 
   if (!title) return showWatchFormError("Enter a title first.");
   if (!year || Number(year) < 1888) return showWatchFormError("Enter a valid year.");
-  if (!githubConfigured()) return showWatchFormError("Add GITHUB_TOKEN and GITHUB_REPO to config.js first — see README.");
+  if (!publishWorkerConfigured()) return showWatchFormError("Set PUBLISH_WORKER_URL in config.public.js first — see README.");
 
   const entry = { title, year: Number(year) };
   if (watchLookupResult.genre) entry.genre = watchLookupResult.genre;
@@ -208,28 +208,15 @@ document.getElementById("watch-add-form").addEventListener("submit", (e) => {
   publishWatchEntryToGithub(entry);
 });
 
-// ---------- Publish straight to GitHub (same approach as add.js) ----------
+// ---------- Publish via the publish worker (same approach as add.js) ----------
+// The site never talks to GitHub with a write token itself — it posts the
+// new entry to a small Cloudflare Worker (PUBLISH_WORKER_URL, set in
+// config.public.js), which holds the real GitHub token privately and does
+// the actual write. No device needs its own copy of a secret. See
+// README.md's "Publishing without a token on every device" section.
 
-function githubConfigured() {
-  return (
-    typeof GITHUB_TOKEN !== "undefined" && GITHUB_TOKEN &&
-    typeof GITHUB_REPO !== "undefined" && GITHUB_REPO
-  );
-}
-
-function utf8ToBase64(str) {
-  const bytes = new TextEncoder().encode(str);
-  let binary = "";
-  bytes.forEach((b) => {
-    binary += String.fromCharCode(b);
-  });
-  return btoa(binary);
-}
-
-function base64ToUtf8(b64) {
-  const binary = atob(b64.replace(/\n/g, ""));
-  const bytes = Uint8Array.from(binary, (c) => c.charCodeAt(0));
-  return new TextDecoder().decode(bytes);
+function publishWorkerConfigured() {
+  return typeof PUBLISH_WORKER_URL !== "undefined" && PUBLISH_WORKER_URL && PUBLISH_WORKER_URL.trim() !== "";
 }
 
 function setWatchPublishStatus(message, isError = false, isSuccess = false) {
@@ -240,55 +227,28 @@ function setWatchPublishStatus(message, isError = false, isSuccess = false) {
 }
 
 async function publishWatchEntryToGithub(entry) {
-  const branch = typeof GITHUB_BRANCH !== "undefined" && GITHUB_BRANCH ? GITHUB_BRANCH : "main";
-  const path =
-    typeof GITHUB_WATCHLIST_PATH !== "undefined" && GITHUB_WATCHLIST_PATH
-      ? GITHUB_WATCHLIST_PATH
-      : "data/watchlist.json";
-  const apiBase = `https://api.github.com/repos/${GITHUB_REPO}/contents/${path}`;
-  const headers = {
-    Authorization: `Bearer ${GITHUB_TOKEN}`,
-    Accept: "application/vnd.github+json",
-  };
-
   const addBtn = document.getElementById("watch-add-btn");
   addBtn.disabled = true;
-  setWatchPublishStatus("Fetching current watchlist.json from GitHub…");
+  setWatchPublishStatus(`Adding "${entry.title}"…`);
 
   try {
-    const getRes = await fetch(`${apiBase}?ref=${encodeURIComponent(branch)}`, { headers });
-
-    let existing = [];
-    let sha;
-
-    if (getRes.status === 200) {
-      const fileData = await getRes.json();
-      sha = fileData.sha;
-      existing = JSON.parse(base64ToUtf8(fileData.content));
-    } else if (getRes.status !== 404) {
-      const errBody = await getRes.json().catch(() => ({}));
-      throw new Error(errBody.message || `GitHub returned ${getRes.status} fetching the file.`);
-    }
-
-    const merged = [...existing, entry];
-    const content = utf8ToBase64(`${JSON.stringify(merged, null, 2)}\n`);
-
-    setWatchPublishStatus(`Adding "${entry.title}" to GitHub…`);
-
-    const putRes = await fetch(apiBase, {
-      method: "PUT",
-      headers: { ...headers, "Content-Type": "application/json" },
+    const res = await fetch(PUBLISH_WORKER_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(typeof PUBLISH_SITE_KEY !== "undefined" && PUBLISH_SITE_KEY ? { "X-Site-Key": PUBLISH_SITE_KEY } : {}),
+      },
       body: JSON.stringify({
+        path: "data/watchlist.json",
+        entry,
         message: `Add "${entry.title}" to watchlist via watchlist.html`,
-        content,
-        branch,
-        ...(sha ? { sha } : {}),
       }),
     });
 
-    if (!putRes.ok) {
-      const errBody = await putRes.json().catch(() => ({}));
-      throw new Error(errBody.message || `GitHub returned ${putRes.status} publishing the file.`);
+    const result = await res.json().catch(() => ({}));
+
+    if (!res.ok || !result.ok) {
+      throw new Error(result.error || `Publish failed (${res.status}).`);
     }
 
     setWatchPublishStatus(
@@ -302,10 +262,12 @@ async function publishWatchEntryToGithub(entry) {
     setWatchLookupStatus("");
     clearWatchLookupResults();
 
-    // Reflect the new title in the grid right away without a full reload,
-    // clear any active search so the new entry can't be filtered out of view,
-    // and flag it so it renders at the top with a "Just added" highlight.
-    allWatchlist = merged;
+    // Reflect the new title in the grid right away without a full reload
+    // (the worker already wrote it to GitHub for real — this is just so you
+    // see it immediately instead of waiting on a refetch), clear any active
+    // search so it can't be filtered out of view, and flag it so it renders
+    // at the top with a "Just added" highlight.
+    allWatchlist = [...allWatchlist, entry];
     justAddedKey = `${entry.title}|${entry.year}`;
     document.getElementById("watch-search").value = "";
     await applyFilter();
@@ -319,15 +281,15 @@ async function publishWatchEntryToGithub(entry) {
     }, 8000);
   } catch (err) {
     console.error(err);
-    setWatchPublishStatus(err.message || "Add failed. Check your token and repo settings in config.js.", true);
+    setWatchPublishStatus(err.message || "Add failed. Try again in a moment.", true);
   } finally {
     addBtn.disabled = false;
   }
 }
 
-if (!githubConfigured()) {
+if (!publishWorkerConfigured()) {
   document.getElementById("watch-add-btn").disabled = true;
-  document.getElementById("watch-add-btn").title = "Add GITHUB_TOKEN and GITHUB_REPO to config.js to enable this.";
+  document.getElementById("watch-add-btn").title = "Set PUBLISH_WORKER_URL in config.public.js to enable this — see README.";
 }
 
 // ---------- App state ----------

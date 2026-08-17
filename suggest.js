@@ -83,7 +83,7 @@ document.getElementById("suggest-lookup-btn").addEventListener("click", async ()
   const key = getOmdbKey();
 
   if (!title) return setSuggestLookupStatus("Enter a title first.", true);
-  if (!key) return setSuggestLookupStatus("No OMDb key configured — see config.js.", true);
+  if (!key) return setSuggestLookupStatus("No OMDb key configured — see config.public.js.", true);
 
   setSuggestLookupStatus("Searching…");
   clearSuggestLookupResults();
@@ -131,7 +131,7 @@ document.getElementById("suggest-form").addEventListener("submit", (e) => {
 
   if (!title) return showSuggestFormError("Enter a title first.");
   if (!year || Number(year) < 1888) return showSuggestFormError("Enter a valid year.");
-  if (!githubConfigured()) return showSuggestFormError("Add GITHUB_TOKEN and GITHUB_REPO to config.js first — see README.");
+  if (!publishWorkerConfigured()) return showSuggestFormError("Set PUBLISH_WORKER_URL in config.public.js first — see README.");
 
   const entry = { title, year: Number(year) };
   if (suggestLookupResult.genre) entry.genre = suggestLookupResult.genre;
@@ -143,28 +143,15 @@ document.getElementById("suggest-form").addEventListener("submit", (e) => {
   publishSuggestionToGithub(entry);
 });
 
-// ---------- Publish straight to GitHub (same approach as watchlist.js) ----------
+// ---------- Publish via the publish worker (same approach as watchlist.js) ----------
+// The site never talks to GitHub with a write token itself — it posts the
+// new entry to a small Cloudflare Worker (PUBLISH_WORKER_URL, set in
+// config.public.js), which holds the real GitHub token privately and does
+// the actual write. No device needs its own copy of a secret. See
+// README.md's "Publishing without a token on every device" section.
 
-function githubConfigured() {
-  return (
-    typeof GITHUB_TOKEN !== "undefined" && GITHUB_TOKEN &&
-    typeof GITHUB_REPO !== "undefined" && GITHUB_REPO
-  );
-}
-
-function utf8ToBase64(str) {
-  const bytes = new TextEncoder().encode(str);
-  let binary = "";
-  bytes.forEach((b) => {
-    binary += String.fromCharCode(b);
-  });
-  return btoa(binary);
-}
-
-function base64ToUtf8(b64) {
-  const binary = atob(b64.replace(/\n/g, ""));
-  const bytes = Uint8Array.from(binary, (c) => c.charCodeAt(0));
-  return new TextDecoder().decode(bytes);
+function publishWorkerConfigured() {
+  return typeof PUBLISH_WORKER_URL !== "undefined" && PUBLISH_WORKER_URL && PUBLISH_WORKER_URL.trim() !== "";
 }
 
 function setSuggestPublishStatus(message, isError = false, isSuccess = false) {
@@ -175,55 +162,28 @@ function setSuggestPublishStatus(message, isError = false, isSuccess = false) {
 }
 
 async function publishSuggestionToGithub(entry) {
-  const branch = typeof GITHUB_BRANCH !== "undefined" && GITHUB_BRANCH ? GITHUB_BRANCH : "main";
-  const path =
-    typeof GITHUB_WATCHLIST_PATH !== "undefined" && GITHUB_WATCHLIST_PATH
-      ? GITHUB_WATCHLIST_PATH
-      : "data/watchlist.json";
-  const apiBase = `https://api.github.com/repos/${GITHUB_REPO}/contents/${path}`;
-  const headers = {
-    Authorization: `Bearer ${GITHUB_TOKEN}`,
-    Accept: "application/vnd.github+json",
-  };
-
   const addBtn = document.getElementById("suggest-add-btn");
   addBtn.disabled = true;
-  setSuggestPublishStatus("Fetching current watchlist.json from GitHub…");
+  setSuggestPublishStatus(`Adding "${entry.title}"…`);
 
   try {
-    const getRes = await fetch(`${apiBase}?ref=${encodeURIComponent(branch)}`, { headers });
-
-    let existing = [];
-    let sha;
-
-    if (getRes.status === 200) {
-      const fileData = await getRes.json();
-      sha = fileData.sha;
-      existing = JSON.parse(base64ToUtf8(fileData.content));
-    } else if (getRes.status !== 404) {
-      const errBody = await getRes.json().catch(() => ({}));
-      throw new Error(errBody.message || `GitHub returned ${getRes.status} fetching the file.`);
-    }
-
-    const merged = [...existing, entry];
-    const content = utf8ToBase64(`${JSON.stringify(merged, null, 2)}\n`);
-
-    setSuggestPublishStatus(`Adding "${entry.title}" to GitHub…`);
-
-    const putRes = await fetch(apiBase, {
-      method: "PUT",
-      headers: { ...headers, "Content-Type": "application/json" },
+    const res = await fetch(PUBLISH_WORKER_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(typeof PUBLISH_SITE_KEY !== "undefined" && PUBLISH_SITE_KEY ? { "X-Site-Key": PUBLISH_SITE_KEY } : {}),
+      },
       body: JSON.stringify({
+        path: "data/watchlist.json",
+        entry,
         message: `Suggest "${entry.title}" via suggest.html`,
-        content,
-        branch,
-        ...(sha ? { sha } : {}),
       }),
     });
 
-    if (!putRes.ok) {
-      const errBody = await putRes.json().catch(() => ({}));
-      throw new Error(errBody.message || `GitHub returned ${putRes.status} publishing the file.`);
+    const result = await res.json().catch(() => ({}));
+
+    if (!res.ok || !result.ok) {
+      throw new Error(result.error || `Publish failed (${res.status}).`);
     }
 
     setSuggestPublishStatus(
@@ -237,20 +197,21 @@ async function publishSuggestionToGithub(entry) {
     setSuggestLookupStatus("");
     clearSuggestLookupResults();
 
-    // Refresh the picker pool so a suggestion just added is immediately pickable.
-    allWatchlist = merged;
+    // Refresh the picker pool so a suggestion just added is immediately
+    // pickable (the worker already wrote it to GitHub for real).
+    allWatchlist = [...allWatchlist, entry];
     populatePickerFilters();
   } catch (err) {
     console.error(err);
-    setSuggestPublishStatus(err.message || "Add failed. Check your token and repo settings in config.js.", true);
+    setSuggestPublishStatus(err.message || "Add failed. Try again in a moment.", true);
   } finally {
     addBtn.disabled = false;
   }
 }
 
-if (!githubConfigured()) {
+if (!publishWorkerConfigured()) {
   document.getElementById("suggest-add-btn").disabled = true;
-  document.getElementById("suggest-add-btn").title = "Add GITHUB_TOKEN and GITHUB_REPO to config.js to enable this.";
+  document.getElementById("suggest-add-btn").title = "Set PUBLISH_WORKER_URL in config.public.js to enable this — see README.";
 }
 
 // ---------- Random picker ----------

@@ -162,7 +162,7 @@ document.getElementById("lookup-btn").addEventListener("click", async () => {
   const key = getOmdbKey();
 
   if (!title) return setLookupStatus("Enter a title first.", true);
-  if (!key) return setLookupStatus("No OMDb key configured — see config.js.", true);
+  if (!key) return setLookupStatus("No OMDb key configured — see config.public.js.", true);
 
   setLookupStatus("Searching…");
   clearResults();
@@ -205,95 +205,59 @@ function clearError() {
   el.textContent = "";
 }
 
-// ---------- Publish straight to GitHub ----------
-// Reads the current data/movies.json from the repo via the GitHub Contents
-// API, appends the new ticket, and commits the result back — one movie at
-// a time, no staging or manual merging. Needs GITHUB_TOKEN and GITHUB_REPO
-// set in config.js (gitignored, never shown on the page). See README for
-// how to create a token scoped to just this repo.
+// ---------- Publish via the publish worker ----------
+// The site never talks to GitHub with a write token itself — it posts the
+// new entry to a small Cloudflare Worker (PUBLISH_WORKER_URL, set in
+// config.public.js), which holds the real GitHub token privately and does
+// the actual write. That means no device needs its own copy of a secret —
+// the Add button just works from any browser. See README.md's "Publishing
+// without a token on every device" section to set one up.
 
+function publishWorkerConfigured() {
+  return typeof PUBLISH_WORKER_URL !== "undefined" && PUBLISH_WORKER_URL && PUBLISH_WORKER_URL.trim() !== "";
+}
+
+// Kept as an alias so any old references still work.
 function githubConfigured() {
-  return (
-    typeof GITHUB_TOKEN !== "undefined" && GITHUB_TOKEN &&
-    typeof GITHUB_REPO !== "undefined" && GITHUB_REPO
-  );
+  return publishWorkerConfigured();
 }
 
-function utf8ToBase64(str) {
-  const bytes = new TextEncoder().encode(str);
-  let binary = "";
-  bytes.forEach((b) => {
-    binary += String.fromCharCode(b);
-  });
-  return btoa(binary);
-}
-
-function base64ToUtf8(b64) {
-  const binary = atob(b64.replace(/\n/g, ""));
-  const bytes = Uint8Array.from(binary, (c) => c.charCodeAt(0));
-  return new TextDecoder().decode(bytes);
-}
-
-function setPublishStatus(message, isError = false) {
+function setPublishStatus(message, isError = false, isSuccess = false) {
   const el = document.getElementById("publish-status");
   el.textContent = message;
   el.classList.toggle("error", isError);
+  el.classList.toggle("success", isSuccess);
 }
 
 async function publishEntryToGithub(entry) {
-  const branch = typeof GITHUB_BRANCH !== "undefined" && GITHUB_BRANCH ? GITHUB_BRANCH : "main";
-  const path =
-    typeof GITHUB_FILE_PATH !== "undefined" && GITHUB_FILE_PATH ? GITHUB_FILE_PATH : "data/movies.json";
-  const apiBase = `https://api.github.com/repos/${GITHUB_REPO}/contents/${path}`;
-  const headers = {
-    Authorization: `Bearer ${GITHUB_TOKEN}`,
-    Accept: "application/vnd.github+json",
-  };
-
   const addBtn = document.getElementById("add-btn");
   addBtn.disabled = true;
-  setPublishStatus("Fetching current movies.json from GitHub…");
+  setPublishStatus(`Adding "${entry.title}"…`);
 
   try {
-    const getRes = await fetch(`${apiBase}?ref=${encodeURIComponent(branch)}`, { headers });
-
-    let existing = [];
-    let sha;
-
-    if (getRes.status === 200) {
-      const fileData = await getRes.json();
-      sha = fileData.sha;
-      existing = JSON.parse(base64ToUtf8(fileData.content));
-    } else if (getRes.status !== 404) {
-      const errBody = await getRes.json().catch(() => ({}));
-      throw new Error(errBody.message || `GitHub returned ${getRes.status} fetching the file.`);
-    }
-    // 404 means data/movies.json doesn't exist in the repo yet — that's
-    // fine, we'll create it starting from an empty array.
-
-    const merged = [...existing, entry];
-    const content = utf8ToBase64(`${JSON.stringify(merged, null, 2)}\n`);
-
-    setPublishStatus(`Adding "${entry.title}" to GitHub…`);
-
-    const putRes = await fetch(apiBase, {
-      method: "PUT",
-      headers: { ...headers, "Content-Type": "application/json" },
+    const res = await fetch(PUBLISH_WORKER_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(typeof PUBLISH_SITE_KEY !== "undefined" && PUBLISH_SITE_KEY ? { "X-Site-Key": PUBLISH_SITE_KEY } : {}),
+      },
       body: JSON.stringify({
+        path: "data/movies.json",
+        entry,
         message: `Add "${entry.title}" via add.html`,
-        content,
-        branch,
-        ...(sha ? { sha } : {}),
       }),
     });
 
-    if (!putRes.ok) {
-      const errBody = await putRes.json().catch(() => ({}));
-      throw new Error(errBody.message || `GitHub returned ${putRes.status} publishing the file.`);
+    const result = await res.json().catch(() => ({}));
+
+    if (!res.ok || !result.ok) {
+      throw new Error(result.error || `Publish failed (${res.status}).`);
     }
 
     setPublishStatus(
-      `Added "${entry.title}"! Pushed straight to ${GITHUB_REPO}. GitHub Pages will update in a minute or two.`
+      `✓ Added "${entry.title}"! GitHub Pages will update in a minute or two.`,
+      false,
+      true
     );
 
     document.getElementById("ticket-form").reset();
@@ -303,7 +267,7 @@ async function publishEntryToGithub(entry) {
     setLookupStatus("");
   } catch (err) {
     console.error(err);
-    setPublishStatus(err.message || "Add failed. Check your token and repo settings in config.js.", true);
+    setPublishStatus(err.message || "Add failed. Try again in a moment.", true);
   } finally {
     addBtn.disabled = false;
   }
@@ -324,7 +288,7 @@ document.getElementById("ticket-form").addEventListener("submit", (e) => {
   if (!watchedDate) return showError("Pick the date you watched it.");
   if (stars.mollie === 0) return showError("Give Mollie's rating a star count.");
   if (stars.ian === 0) return showError("Give Ian's rating a star count.");
-  if (!githubConfigured()) return showError("Add GITHUB_TOKEN and GITHUB_REPO to config.js first — see README.");
+  if (!publishWorkerConfigured()) return showError("Set PUBLISH_WORKER_URL in config.public.js first — see README.");
 
   const entry = {
     title,
@@ -340,9 +304,9 @@ document.getElementById("ticket-form").addEventListener("submit", (e) => {
   publishEntryToGithub(entry);
 });
 
-if (!githubConfigured()) {
+if (!publishWorkerConfigured()) {
   document.getElementById("add-btn").disabled = true;
-  document.getElementById("add-btn").title = "Add GITHUB_TOKEN and GITHUB_REPO to config.js to enable this.";
+  document.getElementById("add-btn").title = "Set PUBLISH_WORKER_URL in config.public.js to enable this — see README.";
 }
 
 // ---------- Prefill from a "Log this" link (watchlist.html) ----------

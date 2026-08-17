@@ -28,30 +28,28 @@ GitHub Pages, and it just works.
 
 ## Config & secrets
 
-Two config files, two different trust levels:
+There's one config file, and it's entirely public:
 
 - **`config.public.js`** — committed to git, ships with the live site. Holds
-  only `OMDB_API_KEY`. That key is free-tier, rate-limited (1,000
-  requests/day), and read-only, so it's fine for it to be publicly visible
-  — worst case someone burns your daily quota. This is what makes posters,
-  genres, plots, and Oscar badges work on the live GitHub Pages site, not
-  just when running locally.
-- **`config.js`** — gitignored, local-only, never deployed. Holds
-  `GITHUB_TOKEN` and friends. That token can *write* to your repo, so it
-  must never be committed or shipped anywhere — a leaked write token would
-  let anyone push arbitrary files to this repo, which GitHub Pages would
-  then serve to every visitor. Copy `config.example.js` to `config.js` to
-  set it up (see "Publishing straight to GitHub" below).
+  `OMDB_API_KEY` (free-tier, rate-limited, read-only — safe to expose;
+  worst case someone burns your daily quota), plus `PUBLISH_WORKER_URL` and
+  `PUBLISH_SITE_KEY`, which point at a small Cloudflare Worker that does the
+  actual writing to GitHub on your behalf. See "Publishing without a token
+  on every device" below for what that is and how to set it up.
 
-Both files load on every page; if `config.js` is missing (as it will be on
-the deployed site), the GitHub-dependent features — the **Add** buttons —
-just show as disabled instead of failing loudly.
+Nothing sensitive lives in this project's files or on your Mac anymore. The
+one real secret — your GitHub write token — lives only inside the Cloudflare
+Worker, set up once, and no device that visits the site ever sees it.
+
+(Older versions of this project used a second, gitignored `config.js` file
+to hold that token locally. That's no longer needed — if you still have
+`config.js` or `config.example.js` sitting in this folder, they're unused
+and safe to delete.)
 
 ## Adding a movie (the easy way)
 
-1. Open `add.html` in your browser. Your OMDb key comes from
-   `config.public.js` (see "Config & secrets" above) — it's never shown or
-   typed into the page.
+1. Open `add.html` (on the live site or locally). Your OMDb key comes from
+   `config.public.js` — it's never shown or typed into the page.
 2. Type the title, then hit **Look up on OMDb**. It searches OMDb and shows
    every matching title/year as a clickable list — handy for franchises,
    remakes, and sequels that share a name. Click the right one and it fills
@@ -59,12 +57,14 @@ just show as disabled instead of failing loudly.
 3. Pick the date you watched it, and click stars for each of you — click
    the left half of a star for a half rating (e.g. 3.5), the right half for
    a whole one.
-4. Hit **Add**. It commits straight to `data/movies.json` in your repo —
+4. Hit **Add**. It publishes straight to `data/movies.json` in your repo —
    GitHub Pages picks up the change automatically within a minute or two.
    Repeat for the next movie.
 
-This needs the GitHub token set up (see below) — without it, the **Add**
-button stays disabled and the page tells you so.
+This needs the publish worker set up (see "Publishing without a token on
+every device" below) — without it, the **Add** button stays disabled and
+the page tells you so. Once it's set up, this works from any device — your
+Mac, your phone, Mollie's laptop — with no extra setup per device.
 
 If you haven't set up the OMDb key, the lookup step just won't have
 anything to search — you can still type the year by hand and the ticket
@@ -124,18 +124,29 @@ revoked and you want to swap in your own.
    ```js
    const OMDB_API_KEY = "your-key-here";
    ```
-   Unlike `config.js`, this file is meant to be committed — see "Config &
-   secrets" above for why that's fine for this particular key.
+   This file is meant to be committed — see "Config & secrets" above for
+   why that's fine for this particular key.
 4. Posters use the `Poster` field from OMDb's main API response (an Amazon
    CDN link) by default, falling back to the dedicated poster endpoint
    (`img.omdbapi.com/?i={imdbID}&h=600`) only if that's missing — the main
    field tends to be more reliable.
 
-## Publishing straight to GitHub (required for the Add buttons)
+## Publishing without a token on every device
 
-`add.html` and `watchlist.html` both commit straight to this repo via the
-GitHub API when you hit their **Add** button — no downloading a file and
-merging it by hand. This needs a token.
+`add.html`, `watchlist.html`, and `suggest.html` all publish straight to
+this repo when you hit their **Add** button. Instead of each device needing
+its own copy of a GitHub write token (which either can't be deployed
+publicly, or would need re-entering on every browser), a small piece of
+code called a **Cloudflare Worker** holds the real token privately and does
+the writing on the site's behalf. You deploy it once, and after that every
+device — your Mac, your phone, Mollie's laptop — can just hit Add and it
+works, no setup per device.
+
+This is entirely free (Cloudflare's free tier is far more than this project
+needs) and doesn't require any coding or Terminal use — it's all done
+through Cloudflare's website.
+
+**1. Create your GitHub token** (same as before, this part hasn't changed):
 
 1. Go to **github.com → Settings → Developer settings → Personal access
    tokens → Fine-grained tokens** (or go directly to
@@ -146,21 +157,50 @@ merging it by hand. This needs a token.
 4. Under **Permissions → Repository permissions**, set **Contents** to
    **Read and write**. Leave everything else as **No access**.
 5. Set an expiration (90 days is a reasonable default — you'll just
-   generate a new one when it lapses).
+   generate a new one when it lapses, and update the Worker below).
 6. Click **Generate token** and copy it — GitHub only shows it once.
-7. Copy `config.example.js` to `config.js` (if you haven't already) and
-   paste the token in:
-   ```js
-   const GITHUB_TOKEN = "your-token-here";
-   const GITHUB_REPO = "duransound/movie-stubs";
-   const GITHUB_BRANCH = "main"; // change if your default branch differs
-   ```
-   `config.js` is gitignored, so the token never gets committed — see
-   "Config & secrets" above for why that matters more here than for the
-   OMDb key.
 
-If `GITHUB_TOKEN` is blank, the Add button is disabled and the page tells
-you so.
+**2. Create the Worker:**
+
+1. Go to https://dash.cloudflare.com and sign up for a free account if you
+   don't have one.
+2. In the sidebar, go to **Workers & Pages** → **Create** → **Create
+   Worker**. Give it any name (e.g. `movie-stubs-publish`) and click
+   **Deploy** to create it with the default placeholder code.
+3. Click **Edit code**. Delete everything in the editor and paste in the
+   entire contents of this project's `cloudflare-worker.js` file instead.
+   Click **Deploy** / **Save and deploy**.
+4. Back on the Worker's page, go to **Settings → Variables and Secrets**
+   and add these (use **Secret** for the token, **Text**/plain for the
+   rest):
+   - `GITHUB_TOKEN` (Secret) — the token you copied above.
+   - `GITHUB_REPO` — `duransound/movie-stubs`
+   - `GITHUB_BRANCH` — `main` (or whatever your default branch is)
+   - `ALLOWED_ORIGIN` — `https://duransound.github.io`
+   - `SITE_KEY` — make up any random string, e.g. `movie-stubs-8f2k`. This
+     isn't a real secret (it'll be visible in the site's code either way) —
+     it just filters out random bots that stumble onto the Worker's URL.
+   Save/deploy after adding these.
+5. Copy the Worker's URL — it's shown at the top of the Worker's page,
+   something like `https://movie-stubs-publish.yourname.workers.dev`.
+
+**3. Point the site at it:**
+
+Open `config.public.js` and fill in the two values to match what you just
+set up:
+
+```js
+const PUBLISH_WORKER_URL = "https://movie-stubs-publish.yourname.workers.dev";
+const PUBLISH_SITE_KEY = "movie-stubs-8f2k"; // must match SITE_KEY on the Worker
+```
+
+Push that change to GitHub (see "Deploying to GitHub Pages" below) — once
+it's live, the Add buttons on every page work from any device, no further
+setup needed.
+
+If you ever need to rotate the GitHub token (it expired, or you think it
+leaked), generate a new one and update just the `GITHUB_TOKEN` secret on
+the Worker — nothing on the site itself needs to change.
 
 ## Customizing
 
@@ -194,17 +234,13 @@ color is `--maroon`.
   ratings — becomes visible to anyone with the URL, indefinitely. Read
   back through your notes/venues before pushing if that changes anything
   you'd want to phrase differently.
-- **Confirm `config.js` is actually gitignored, not just listed as
-  intending to be.** After `git init`, run `git status` and make sure
-  `config.js` doesn't show up as a file ready to be added — only
-  `config.public.js` and `config.example.js` should. If you ever ran `git
-  add -A` or similar before setting up `.gitignore`, double-check
-  `git log -- config.js` comes back empty; a token committed once and
-  later deleted still lives in git history and should be treated as
-  burned (regenerate it).
-- **`GITHUB_TOKEN` needs to be in your local `config.js` for the Add
-  buttons to work even locally** — see "Config & secrets" above. It's
-  never pushed either way.
+- **Before pushing code changes from your Mac, always run `git pull`
+  first.** The Add buttons publish straight to GitHub independently of
+  your Mac's local folder — if you push without pulling first, your Mac's
+  older local copy of `data/movies.json` / `data/watchlist.json` can
+  overwrite anything added through the site since your last pull. This is
+  the single most important habit for this project: **pull before you
+  push, every time.**
 
 Then:
 
@@ -214,9 +250,9 @@ Then:
    pick your default branch and the `/ (root)` folder.
 4. Save. Your site will be live at `https://<username>.github.io/<repo-name>/`
    within a minute or two — open it and confirm posters are actually
-   showing (proves `config.public.js` made it into the deployed site) and
-   that the **Add** button works from a browser where you've set up a local
-   `config.js`.
+   showing (proves `config.public.js` made it into the deployed site) and,
+   once you've set up the publish worker (see above), that the **Add**
+   button works.
 
 ## Coming attractions (watchlist)
 
@@ -235,10 +271,9 @@ same way `add.html` does:
 1. Type a title and hit **Look up on OMDb** — pick the right match from the
    list (handles sequels/remakes the same way `add.html` does), or just
    type the year by hand and skip the lookup.
-2. Hit **Add**. It commits straight to `data/watchlist.json` in the repo
-   (needs the same `GITHUB_TOKEN` setup described above — it reuses
-   `GITHUB_REPO`/`GITHUB_BRANCH`, writing to `GITHUB_WATCHLIST_PATH` instead
-   of `GITHUB_FILE_PATH`). Repeat for the next title.
+2. Hit **Add**. It publishes straight to `data/watchlist.json` in the repo
+   through the same publish worker described above. Repeat for the next
+   title.
 
 Or skip the form and edit `data/watchlist.json` directly:
 
@@ -279,8 +314,8 @@ grid with a gold "Just added" highlight for a few seconds, whether added via
    title from whatever matches. Its "Log this" button jumps to `add.html`
    the same way watchlist cards do.
 
-Needs the same `GITHUB_TOKEN` setup as the other Add buttons to publish
-pitches; the random picker works with no token, since it only reads.
+Needs the same publish worker setup as the other Add buttons to publish
+pitches; the random picker works with no setup at all, since it only reads.
 
 ## Box Office Report (stats)
 
@@ -314,9 +349,8 @@ Movie Stubs/
 ├── stats.js
 ├── styles.css
 ├── app.js
-├── config.public.js      OMDb key — committed, ships with the site
-├── config.example.js    template — copy to config.js
-├── config.js             GitHub token, gitignored, never committed
+├── config.public.js      OMDb key + publish worker URL — committed, all public
+├── cloudflare-worker.js  code to paste into your Cloudflare Worker (not loaded by the site)
 ├── .gitignore
 ├── RATING-GUIDE.md      what your stars mean
 └── data/

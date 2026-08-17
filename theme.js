@@ -5,12 +5,12 @@
 // document load, so there's no other way to persist the pick).
 
 const THEMES = [
-  { value: "classic", label: "90s Ticket Stub (Classic)" },
-  { value: "socal", label: "SoCal 80s Computer" },
-  { value: "artdeco", label: "1930s Art Deco" },
-  { value: "vintage50s", label: "1950s Vintage" },
-  { value: "midcentury", label: "1960s Mid-Century Modern" },
-  { value: "cinematic70s", label: "1970s Super Cinematic" },
+  { value: "classic", label: "1990s" },
+  { value: "socal", label: "1980s" },
+  { value: "cinematic70s", label: "1970s" },
+  { value: "midcentury", label: "1960s" },
+  { value: "vintage50s", label: "1950s" },
+  { value: "artdeco", label: "1930s" },
 ];
 
 const THEME_KEY = "movieStubTheme";

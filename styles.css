@@ -1701,7 +1701,13 @@ a {
 [data-theme="vintage50s"] .price,
 [data-theme="vintage50s"] .leaderboard-rank,
 [data-theme="vintage50s"] .report-heading {
-  font-family: "Alfa Slab One", "Anton", sans-serif;
+  /* Tiki-bar bubble lettering — Luckiest Guy is the closest free stand-in
+     for the carved-wood/bamboo lettering on 50s tiki menus and mugs. */
+  font-family: "Luckiest Guy", "Alfa Slab One", "Anton", sans-serif;
+}
+
+[data-theme="vintage50s"] .movie-title {
+  letter-spacing: 0.02em;
 }
 
 [data-theme="vintage50s"] .title {
@@ -1773,12 +1779,15 @@ a {
    ============================================================ */
 
 [data-theme="midcentury"] {
-  --paper: #f4ead8;
-  --paper-shadow: #d8c9a3;
-  --maroon: #cc6b3c;
-  --maroon-dark: #4e3629;
-  --ink: #3b2a1e;
-  --ink-dim: #8a6a4a;
+  /* Pushed past restrained mid-century-modern into Haight-Ashbury
+     psychedelic: deep purple ground, hot magenta accent, a swirling
+     rainbow masthead instead of flat Saul-Bass rings. */
+  --paper: #fbead2;
+  --paper-shadow: #e9c8e0;
+  --maroon: #e0177d;
+  --maroon-dark: #241435;
+  --ink: #2a1b3d;
+  --ink-dim: #8a5aa0;
 }
 
 [data-theme="midcentury"] .masthead {
@@ -1788,31 +1797,33 @@ a {
 }
 
 [data-theme="midcentury"] .masthead::before {
+  /* swirling psychedelic paisley — a rainbow conic sweep instead of
+     flat concentric rings, rotated slowly for a liquid-light-show feel */
   content: "";
   position: absolute;
-  left: -80px;
-  bottom: -220px;
-  width: 440px;
-  height: 440px;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle, transparent 0 120px, #cc6b3c 120px 128px, transparent 128px 160px,
-      #7a8c5a 160px 168px, transparent 168px 200px, #e0a83c 200px 208px, transparent 208px);
+  left: 50%;
+  top: 50%;
+  width: 900px;
+  height: 900px;
+  transform: translate(-50%, -50%);
+  background-image: repeating-conic-gradient(
+    from 0deg,
+    #e0177d 0deg 12deg,
+    #ff8a3d 12deg 24deg,
+    #ffd23f 24deg 36deg,
+    #3fb87a 36deg 48deg,
+    #3f8fd2 48deg 60deg,
+    #8a3dff 60deg 72deg
+  );
+  opacity: 0.16;
+  border-radius: 44% 56% 62% 38% / 42% 46% 54% 58%;
+  animation: midcentury-swirl 40s linear infinite;
   z-index: 0;
 }
 
-[data-theme="midcentury"] .masthead::after {
-  content: "";
-  position: absolute;
-  right: -100px;
-  top: -160px;
-  width: 320px;
-  height: 320px;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle, transparent 0 90px, #e0a83c 90px 98px, transparent 98px 130px,
-      #cc6b3c 130px 138px, transparent 138px);
-  z-index: 0;
+@keyframes midcentury-swirl {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
 [data-theme="midcentury"] .masthead-inner {
@@ -1828,35 +1839,37 @@ a {
 [data-theme="midcentury"] .price,
 [data-theme="midcentury"] .leaderboard-rank,
 [data-theme="midcentury"] .report-heading {
-  font-family: "Righteous", "Anton", sans-serif;
+  /* Fascinate is drawn explicitly in the wavy, liquid-lettering style
+     of 60s Haight-Ashbury concert posters — the psychedelic signal. */
+  font-family: "Fascinate", "Righteous", "Anton", sans-serif;
 }
 
 [data-theme="midcentury"] .title {
-  color: #f4ead8;
-  text-shadow: none;
+  color: #ffd23f;
+  text-shadow: 0 0 18px rgba(224, 23, 125, 0.6);
 }
 
 [data-theme="midcentury"] .eyebrow {
-  color: #e0a83c;
+  color: #ff8a3d;
   letter-spacing: 0.2em;
 }
 
 [data-theme="midcentury"] .subtitle {
-  color: #d8c9a3;
+  color: #e9c8e0;
 }
 
 [data-theme="midcentury"] .masthead-nav a {
-  border-color: #d8c9a3;
-  color: #f4ead8;
+  border-color: #e9c8e0;
+  color: #fbead2;
 }
 
 [data-theme="midcentury"] .masthead-nav a:hover {
-  background: #f4ead8;
+  background: #fbead2;
   color: var(--maroon-dark);
 }
 
 [data-theme="midcentury"] .theme-picker {
-  color: #d8c9a3;
+  color: #e9c8e0;
 }
 
 [data-theme="midcentury"] .ticket,
@@ -1886,7 +1899,7 @@ a {
   height: 0;
   border-style: solid;
   border-width: 0 26px 26px 0;
-  border-color: transparent #7a8c5a transparent transparent;
+  border-color: transparent #3f8fd2 transparent transparent;
 }
 
 /* ============================================================
@@ -1968,14 +1981,18 @@ a {
 [data-theme="cinematic70s"] .price,
 [data-theme="cinematic70s"] .leaderboard-rank,
 [data-theme="cinematic70s"] .report-heading {
-  font-family: "Bebas Neue", "Anton", sans-serif;
-  letter-spacing: 0.04em;
+  /* ITC Avant Garde Gothic isn't a free/web font — Poppins is the
+     closest widely-available geometric sans with the same circular,
+     Herb-Lubalin-era look (70s film titles, record sleeves). */
+  font-family: "Poppins", "Anton", sans-serif;
+  font-weight: 800;
+  letter-spacing: 0.01em;
 }
 
 [data-theme="cinematic70s"] .title {
   color: var(--maroon);
   text-shadow: 0 2px 12px rgba(224, 123, 57, 0.5);
-  font-size: clamp(2.4rem, 7vw, 4.2rem);
+  font-size: clamp(2.1rem, 5.6vw, 3.4rem);
 }
 
 [data-theme="cinematic70s"] .eyebrow {

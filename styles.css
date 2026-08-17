@@ -48,10 +48,44 @@ a {
 /* ---------- Masthead ---------- */
 
 .masthead {
+  position: relative;
   background: var(--maroon);
   border-bottom: 6px solid var(--maroon-dark);
   padding: 2.5rem 1.5rem 2rem;
   text-align: center;
+  overflow: hidden;
+}
+
+/* Chasing marquee bulbs — a real theater-marquee chase: the whole dot
+   strand JUMPS forward one bulb-width at a time (steps(), not a smooth
+   scroll), so it reads as bulbs sequentially popping on/off rather than
+   a sliding pattern. */
+.masthead::before,
+.masthead::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 12px;
+  background-image: radial-gradient(circle, var(--paper) 3px, transparent 3.5px);
+  background-size: 22px 12px;
+  background-repeat: repeat-x;
+  opacity: 0.8;
+  animation: marquee-chase 1.6s steps(11) infinite;
+  z-index: 0;
+}
+
+.masthead::before { top: 0; }
+.masthead::after { bottom: 0; animation-direction: reverse; }
+
+@keyframes marquee-chase {
+  from { background-position: 0 0; }
+  to { background-position: 242px 0; }
+}
+
+.masthead-inner {
+  position: relative;
+  z-index: 1;
 }
 
 .masthead-inner {
@@ -1314,6 +1348,26 @@ a {
   cursor: pointer;
 }
 
+/* ---------- Paper texture ----------
+   A fine fiber-grain noise, multiplied over every card's solid --paper
+   color so ticket stubs, watch cards, forms, stat tiles, leaderboard
+   rows, and director rows all read as printed stock instead of flat
+   color. Runs on the base rule so it automatically applies under every
+   theme (only the --paper variable itself changes per theme). The noise
+   is compressed to a light band (feComponentTransfer) before the
+   multiply blend, so it darkens paper only slightly rather than adding
+   visible speckle contrast. */
+.ticket,
+.watch-card,
+.form-card,
+.stat-tile,
+.leaderboard-row,
+.director-list li {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='paper'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch' result='n'/%3E%3CfeColorMatrix in='n' type='matrix' values='0.33 0.33 0.33 0 0 0.33 0.33 0.33 0 0 0.33 0.33 0.33 0 0 0 0 0 1 0' result='gray'/%3E%3CfeComponentTransfer in='gray'%3E%3CfeFuncR type='linear' slope='0.15' intercept='0.85'/%3E%3CfeFuncG type='linear' slope='0.15' intercept='0.85'/%3E%3CfeFuncB type='linear' slope='0.15' intercept='0.85'/%3E%3C/feComponentTransfer%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23paper)'/%3E%3C/svg%3E");
+  background-blend-mode: multiply;
+  background-size: 180px 180px;
+}
+
 /* ============================================================
    THEME: SoCal 80s Computer
    Dark "screen" surfaces + a single amber phosphor voice for text —
@@ -1341,8 +1395,30 @@ a {
 [data-theme="socal"] .masthead {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(to bottom, #3A1730 0%, #C2577A 45%, #F0A97E 75%, #FFD36E 100%);
+  /* CRT scanlines — the actual thing: tight, even, dark horizontal
+     lines across the whole screen (like the classic "scanlines
+     background/empty CRT monitor" stock texture), not a single beam. */
+  background:
+    repeating-linear-gradient(
+      to bottom,
+      rgba(0, 0, 0, 0.4) 0px,
+      rgba(0, 0, 0, 0.4) 1px,
+      transparent 1px,
+      transparent 3px
+    ),
+    linear-gradient(to bottom, #3A1730 0%, #C2577A 45%, #F0A97E 75%, #FFD36E 100%);
   border-bottom: 6px solid var(--maroon-dark);
+  animation: socal-crt-flicker 4s steps(1) infinite;
+}
+
+/* A CRT's brightness never sits perfectly still — a couple of brief,
+   irregular dims per cycle read as a tube flickering, not a strobe. */
+@keyframes socal-crt-flicker {
+  0%, 78%, 100% { filter: brightness(1); }
+  80% { filter: brightness(0.9); }
+  82% { filter: brightness(1); }
+  90% { filter: brightness(0.93); }
+  91% { filter: brightness(1); }
 }
 
 [data-theme="socal"] .masthead::before {
@@ -1598,27 +1674,55 @@ a {
   border-bottom: 4px double var(--maroon);
 }
 
-[data-theme="artdeco"] .masthead::before {
+/* Swinging searchlight beams — two klieg lights sweeping from the bottom
+   corners like a Hollywood premiere, rather than the sunburst spinning
+   in place. Each beam is a conic-gradient wedge centered exactly on its
+   corner, so rotating the whole box swings the beam from that point. */
+[data-theme="artdeco"] .masthead::before,
+[data-theme="artdeco"] .masthead::after {
   content: "";
   position: absolute;
-  left: 50%;
-  top: -30%;
-  width: 900px;
-  height: 900px;
-  transform: translateX(-50%);
-  background-image: repeating-conic-gradient(
-    from 0deg,
-    rgba(201, 162, 39, 0.14) 0deg 3deg,
-    transparent 3deg 9deg
+  bottom: -400px;
+  width: 800px;
+  height: 800px;
+  background-image: conic-gradient(
+    from -14deg,
+    rgba(255, 214, 110, 0.55) 0deg,
+    rgba(201, 162, 39, 0.45) 16deg,
+    transparent 20deg 360deg
   );
-  border-radius: 50%;
+  mix-blend-mode: screen;
   z-index: 0;
+}
+
+[data-theme="artdeco"] .masthead::before {
+  left: -400px;
+  animation: artdeco-searchlight-left 5s ease-in-out infinite alternate;
+}
+
+[data-theme="artdeco"] .masthead::after {
+  right: -400px;
+  animation: artdeco-searchlight-right 5s ease-in-out infinite alternate;
+}
+
+@keyframes artdeco-searchlight-left {
+  from { transform: rotate(8deg); }
+  to { transform: rotate(72deg); }
+}
+
+@keyframes artdeco-searchlight-right {
+  from { transform: rotate(-8deg); }
+  to { transform: rotate(-72deg); }
 }
 
 [data-theme="artdeco"] .masthead-inner {
   position: relative;
   z-index: 1;
 }
+
+/* Base theme's marquee-bulb chase normally lives on .masthead::before/
+   ::after — both are already spoken for by the searchlight beams above,
+   so the bulbs never show here, which suits the double gold border. */
 
 [data-theme="artdeco"] .eyebrow,
 [data-theme="artdeco"] .title,
@@ -1630,6 +1734,13 @@ a {
 [data-theme="artdeco"] .report-heading {
   font-family: "Cinzel", "Anton", serif;
   font-weight: 700;
+}
+
+[data-theme="artdeco"] .title {
+  /* Cinzel Decorative's flourished, stepped serifs are the closest free
+     match to real Deco display faces like Broadway/Peignot/Bifur —
+     ornate, geometric, unmistakably 1920s-30s Parisian poster type. */
+  font-family: "Cinzel Decorative", "Cinzel", "Anton", serif;
 }
 
 [data-theme="artdeco"] .eyebrow {
@@ -1709,6 +1820,8 @@ a {
   padding-bottom: 2.5rem;
 }
 
+/* Drive-in awning — the scalloped edge itself flutters, a gentle skew +
+   scale wobble like real canvas awning fabric moving in a breeze. */
 [data-theme="vintage50s"] .masthead::after {
   content: "";
   position: absolute;
@@ -1718,9 +1831,17 @@ a {
   height: 24px;
   background: radial-gradient(circle at 12px 0, transparent 12px, #fdf6e3 12.5px) repeat-x;
   background-size: 24px 24px;
+  transform-origin: top center;
+  animation: vintage50s-awning-flutter 4.5s ease-in-out infinite;
 }
 
-[data-theme="vintage50s"] .eyebrow,
+@keyframes vintage50s-awning-flutter {
+  0%, 100% { transform: skewX(0deg) scaleY(1) translateY(0); }
+  25% { transform: skewX(2.5deg) scaleY(1.35) translateY(3px); }
+  50% { transform: skewX(0deg) scaleY(0.85) translateY(0); }
+  75% { transform: skewX(-2.5deg) scaleY(1.35) translateY(3px); }
+}
+
 [data-theme="vintage50s"] .title,
 [data-theme="vintage50s"] .movie-title,
 [data-theme="vintage50s"] .watch-title,
@@ -1728,12 +1849,32 @@ a {
 [data-theme="vintage50s"] .price,
 [data-theme="vintage50s"] .leaderboard-rank,
 [data-theme="vintage50s"] .report-heading {
+  /* Alfa Slab One is a real 1950s Soda-Fountain-sign slab: thick, bold,
+     all-caps — the diner-menu-board look period roundups keep citing. */
   font-family: "Alfa Slab One", "Anton", sans-serif;
+}
+
+[data-theme="vintage50s"] .eyebrow {
+  /* Pacifico is a brush script — paired with the slab title the way
+     50s diner branding pairs a script logo with bold sign lettering
+     (malt-shop menus, drive-in marquees). */
+  font-family: "Pacifico", cursive;
+  font-size: 1.15rem;
+  letter-spacing: 0.04em;
+  text-transform: none;
 }
 
 [data-theme="vintage50s"] .title {
   color: #fff;
   text-shadow: 2px 2px 0 #ff6f61;
+  animation: vintage50s-neon-flicker 5s ease-in-out infinite;
+}
+
+/* A neon diner sign flicker — mostly steady, with two quick stutters,
+   rather than a constant strobe. */
+@keyframes vintage50s-neon-flicker {
+  0%, 5%, 9%, 100% { text-shadow: 2px 2px 0 #ff6f61, 0 0 14px rgba(255, 111, 97, 0.65); }
+  6%, 8% { text-shadow: 2px 2px 0 #ff6f61; }
 }
 
 [data-theme="vintage50s"] .eyebrow {
@@ -1795,17 +1936,18 @@ a {
 
 /* ============================================================
    THEME: 1960s Mid-Century Modern
-   Teak brown page, warm parchment cards, mustard/avocado/burnt-
-   orange accents, a Saul-Bass-style concentric-ring masthead.
+   Pushed past restrained mid-century-modern into Haight-Ashbury
+   psychedelic: deep purple ground, hot magenta accent, a swirling
+   rainbow masthead instead of flat Saul-Bass rings.
    ============================================================ */
 
 [data-theme="midcentury"] {
-  --paper: #f4ead8;
-  --paper-shadow: #d8c9a3;
-  --maroon: #cc6b3c;
-  --maroon-dark: #4e3629;
-  --ink: #3b2a1e;
-  --ink-dim: #8a6a4a;
+  --paper: #fbead2;
+  --paper-shadow: #e9c8e0;
+  --maroon: #e0177d;
+  --maroon-dark: #241435;
+  --ink: #2a1b3d;
+  --ink-dim: #8a5aa0;
 }
 
 [data-theme="midcentury"] .masthead {
@@ -1815,31 +1957,47 @@ a {
 }
 
 [data-theme="midcentury"] .masthead::before {
+  /* swirling psychedelic paisley — a rainbow conic sweep instead of
+     flat concentric rings, rotated slowly AND cycled through hue for a
+     liquid-light-show feel (two independent motions on one layer). */
   content: "";
   position: absolute;
-  left: -80px;
-  bottom: -220px;
-  width: 440px;
-  height: 440px;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle, transparent 0 120px, #cc6b3c 120px 128px, transparent 128px 160px,
-      #7a8c5a 160px 168px, transparent 168px 200px, #e0a83c 200px 208px, transparent 208px);
+  left: 50%;
+  top: 50%;
+  width: 900px;
+  height: 900px;
+  transform: translate(-50%, -50%);
+  background-image: repeating-conic-gradient(
+    from 0deg,
+    #e0177d 0deg 12deg,
+    #ff8a3d 12deg 24deg,
+    #ffd23f 24deg 36deg,
+    #3fb87a 36deg 48deg,
+    #3f8fd2 48deg 60deg,
+    #8a3dff 60deg 72deg
+  );
+  opacity: 0.42;
+  border-radius: 44% 56% 62% 38% / 42% 46% 54% 58%;
+  animation: midcentury-swirl 22s linear infinite, midcentury-hue 6s linear infinite, midcentury-pulse 3s ease-in-out infinite;
   z-index: 0;
 }
 
-[data-theme="midcentury"] .masthead::after {
-  content: "";
-  position: absolute;
-  right: -100px;
-  top: -160px;
-  width: 320px;
-  height: 320px;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle, transparent 0 90px, #e0a83c 90px 98px, transparent 98px 130px,
-      #cc6b3c 130px 138px, transparent 138px);
-  z-index: 0;
+@keyframes midcentury-swirl {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes midcentury-hue {
+  from { filter: hue-rotate(0deg) saturate(1.6); }
+  to { filter: hue-rotate(360deg) saturate(1.6); }
+}
+
+/* Opacity breathing, not filter — filter is already spoken for by the
+   hue-cycle above, and two animations can't both drive the same
+   property, so the "throb" lives on opacity instead. */
+@keyframes midcentury-pulse {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 0.55; }
 }
 
 [data-theme="midcentury"] .masthead-inner {
@@ -1855,35 +2013,37 @@ a {
 [data-theme="midcentury"] .price,
 [data-theme="midcentury"] .leaderboard-rank,
 [data-theme="midcentury"] .report-heading {
-  font-family: "Righteous", "Anton", sans-serif;
+  /* Fascinate is drawn explicitly in the wavy, liquid-lettering style
+     of 60s Haight-Ashbury concert posters — the psychedelic signal. */
+  font-family: "Fascinate", "Righteous", "Anton", sans-serif;
 }
 
 [data-theme="midcentury"] .title {
-  color: #f4ead8;
-  text-shadow: none;
+  color: #ffd23f;
+  text-shadow: 0 0 18px rgba(224, 23, 125, 0.6);
 }
 
 [data-theme="midcentury"] .eyebrow {
-  color: #e0a83c;
+  color: #ff8a3d;
   letter-spacing: 0.2em;
 }
 
 [data-theme="midcentury"] .subtitle {
-  color: #d8c9a3;
+  color: #e9c8e0;
 }
 
 [data-theme="midcentury"] .masthead-nav a {
-  border-color: #d8c9a3;
-  color: #f4ead8;
+  border-color: #e9c8e0;
+  color: #fbead2;
 }
 
 [data-theme="midcentury"] .masthead-nav a:hover {
-  background: #f4ead8;
+  background: #fbead2;
   color: var(--maroon-dark);
 }
 
 [data-theme="midcentury"] .theme-picker {
-  color: #d8c9a3;
+  color: #e9c8e0;
 }
 
 [data-theme="midcentury"] .ticket,
@@ -1913,7 +2073,7 @@ a {
   height: 0;
   border-style: solid;
   border-width: 0 26px 26px 0;
-  border-color: transparent #7a8c5a transparent transparent;
+  border-color: transparent #3f8fd2 transparent transparent;
 }
 
 /* ============================================================
@@ -1970,16 +2130,59 @@ a {
   background:
     radial-gradient(ellipse at 50% 30%, rgba(224, 123, 57, 0.25), transparent 60%),
     var(--maroon-dark);
+  animation: cinematic70s-projector-flicker 6s steps(1) infinite;
+}
+
+/* An old-projector flicker — a handful of brief dims scattered through
+   a mostly steady cycle, not a constant strobe. */
+@keyframes cinematic70s-projector-flicker {
+  0%, 91%, 100% { filter: brightness(1); }
+  92% { filter: brightness(0.88); }
+  93% { filter: brightness(1); }
+  95% { filter: brightness(0.92); }
+  96% { filter: brightness(1); }
 }
 
 [data-theme="cinematic70s"] .masthead::before {
   content: "";
   position: absolute;
-  inset: 0;
+  inset: -20%;
   opacity: 0.35;
   mix-blend-mode: overlay;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  animation: cinematic70s-grain-shift 0.6s steps(6) infinite;
   z-index: 0;
+}
+
+/* Jitters the noise texture around each frame — reads as shifting film
+   grain rather than a static overlay. */
+@keyframes cinematic70s-grain-shift {
+  0% { transform: translate(0, 0); }
+  16% { transform: translate(-2%, 1%); }
+  32% { transform: translate(1%, -2%); }
+  48% { transform: translate(-1%, 2%); }
+  64% { transform: translate(2%, 1%); }
+  80% { transform: translate(-2%, -1%); }
+  100% { transform: translate(0, 0); }
+}
+
+/* A warm analog light-leak drifting slowly across the frame — the soft
+   colored blob super-8 and expired film stock leaks in at the edges,
+   here used in place of the base theme's marquee bulbs. */
+[data-theme="cinematic70s"] .masthead::after {
+  content: "";
+  position: absolute;
+  inset: -40% -10%;
+  background-image: radial-gradient(ellipse 480px 320px at 50% 50%, rgba(255, 176, 92, 0.65), rgba(255, 90, 130, 0.25) 45%, transparent 72%);
+  mix-blend-mode: screen;
+  animation: cinematic70s-light-leak 9s ease-in-out infinite;
+  z-index: 0;
+}
+
+@keyframes cinematic70s-light-leak {
+  0% { transform: translateX(-60%); }
+  50% { transform: translateX(60%); }
+  100% { transform: translateX(-60%); }
 }
 
 [data-theme="cinematic70s"] .masthead-inner {
@@ -1995,14 +2198,20 @@ a {
 [data-theme="cinematic70s"] .price,
 [data-theme="cinematic70s"] .leaderboard-rank,
 [data-theme="cinematic70s"] .report-heading {
-  font-family: "Bebas Neue", "Anton", sans-serif;
-  letter-spacing: 0.04em;
+  /* ITC Avant Garde Gothic isn't a free/web font — Poppins is the
+     closest widely-available geometric sans with the same circular,
+     Herb-Lubalin-era look (Lubalin designed Avant Garde Gothic itself
+     in the early 70s off his own magazine logo — this is the decade
+     it actually belongs to, whichever source you check). */
+  font-family: "Poppins", "Anton", sans-serif;
+  font-weight: 800;
+  letter-spacing: 0.01em;
 }
 
 [data-theme="cinematic70s"] .title {
   color: var(--maroon);
   text-shadow: 0 2px 12px rgba(224, 123, 57, 0.5);
-  font-size: clamp(2.4rem, 7vw, 4.2rem);
+  font-size: clamp(2.1rem, 5.6vw, 3.4rem);
 }
 
 [data-theme="cinematic70s"] .eyebrow {

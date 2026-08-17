@@ -207,5 +207,11 @@
     "year": 1986,
     "genre": "Action",
     "director": "Tony Scott"
+  },
+  {
+    "title": "Poor Things",
+    "year": 2023,
+    "genre": "Comedy",
+    "director": "Yorgos Lanthimos"
   }
 ]

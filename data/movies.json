@@ -157,5 +157,18 @@
     "note": "Shaking seats!",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BZmVjNzQ3MjYtYTZiNC00Y2YzLWExZTEtMTM2ZDllNDI0MzgyXkEyXkFqcGc@._V1_QL75_UX380_CR0,12,380,562_.jpg",
     "releaseDate": "1986-05-16"
+  },
+  {
+    "title": "Top Gun",
+    "year": 1986,
+    "watchedDate": "2026-05-13",
+    "ratings": {
+      "mollie": 5,
+      "ian": 4
+    },
+    "venue": "Cinemark Daly City",
+    "note": "Moving seats!",
+    "posterUrl": "https://m.media-amazon.com/images/M/MV5BZmVjNzQ3MjYtYTZiNC00Y2YzLWExZTEtMTM2ZDllNDI0MzgyXkEyXkFqcGc@._V1_QL75_UX380_CR0,12,380,562_.jpg",
+    "releaseDate": "1986-05-16"
   }
 ]

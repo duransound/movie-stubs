@@ -3,7 +3,7 @@
     "title": "The Quiet Girl",
     "year": 2022,
     "genre": "Drama",
-    "director": "Colm Bair\u00e9ad"
+    "director": "Colm Bairéad"
   },
   {
     "title": "Guillermo del Toro's Pinocchio",
@@ -76,7 +76,7 @@
     "title": "Ice Merchants",
     "year": 2022,
     "genre": "Animation",
-    "director": "Jo\u00e3o Gonzalez"
+    "director": "João Gonzalez"
   },
   {
     "title": "An Ostrich Told Me the World is Fake and I Think I Believe It",
@@ -201,5 +201,11 @@
     "year": 1993,
     "genre": "Biography",
     "director": "Taylor Hackford"
+  },
+  {
+    "title": "Top Gun",
+    "year": 1986,
+    "genre": "Action",
+    "director": "Tony Scott"
   }
 ]

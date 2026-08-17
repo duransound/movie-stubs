@@ -7,6 +7,7 @@
       "mollie": 4.5,
       "ian": 5
     },
+    "venue": "The Couch",
     "note": "Incredible performance by Blanchett.. I like the way the movie used time the same way that a conductor would in an orchestra."
   },
   {
@@ -16,7 +17,8 @@
     "ratings": {
       "mollie": 4,
       "ian": 4.5
-    }
+    },
+    "venue": "The Couch",
   },
   {
     "title": "The Fabelmans",

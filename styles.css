@@ -1369,6 +1369,19 @@ a {
 }
 
 /* ============================================================
+   THEME: 1990s Classic
+   The unstyled baseline every other decade is theming away from —
+   header/labels stay on Anton/VT323, but the plot text gets one small
+   period touch: a plain monospace, like text off a video-rental
+   sleeve or a desktop-published ticket stub.
+   ============================================================ */
+
+[data-theme="classic"] .ticket-plot {
+  font-family: "Anonymous Pro", "VT323", monospace;
+  font-size: 0.82rem;
+}
+
+/* ============================================================
    THEME: SoCal 80s Computer
    Dark "screen" surfaces + a single amber phosphor voice for text —
    the phosphor-terminal character, not a recolored paper ticket.
@@ -1587,6 +1600,63 @@ a {
   line-height: 1.6;
 }
 
+/* Press Start 2P on the ticket's label text too, for the full computer-
+   terminal identity — but it's a pixel font with wide glyphs, so every
+   size here is scaled well down from the VT323 defaults to avoid
+   overflowing the narrow stub column or wrapping mid-word. */
+[data-theme="socal"] .ticket-header {
+  font-family: "Press Start 2P", "Anton", sans-serif;
+  font-size: 0.62rem;
+  line-height: 1.7;
+}
+
+[data-theme="socal"] .stub-serial {
+  font-family: "Press Start 2P", "Anton", sans-serif;
+  font-size: 0.5rem;
+}
+
+[data-theme="socal"] .stub-admit {
+  font-family: "Press Start 2P", "Anton", sans-serif;
+  font-size: 0.6rem;
+  letter-spacing: 0.05em;
+}
+
+[data-theme="socal"] .stub-avg {
+  font-family: "Press Start 2P", "Anton", sans-serif;
+  font-size: 0.85rem;
+}
+
+[data-theme="socal"] .ticket-credits {
+  font-family: "Press Start 2P", "Anton", sans-serif;
+  font-size: 0.55rem;
+  line-height: 1.8;
+}
+
+[data-theme="socal"] .ticket-fields {
+  font-family: "Press Start 2P", "Anton", sans-serif;
+  font-size: 0.58rem;
+  line-height: 1.9;
+}
+
+[data-theme="socal"] .note {
+  font-family: "Press Start 2P", "Anton", sans-serif;
+  font-size: 0.55rem;
+  line-height: 1.8;
+}
+
+[data-theme="socal"] .rating-value {
+  font-family: "Press Start 2P", "Anton", sans-serif;
+  font-size: 0.55rem;
+}
+
+[data-theme="socal"] .ticket-plot {
+  /* Share Tech Mono — a readable computer-terminal monospace, unlike
+     Press Start 2P it holds up across full paragraphs, so the whole
+     ticket keeps feeling like it's rendered on a screen. */
+  font-family: "Share Tech Mono", "VT323", monospace;
+  font-size: 0.82rem;
+}
+
 [data-theme="socal"] .barcode-h span {
   box-shadow: 0 0 4px rgba(255, 184, 107, 0.6);
 }
@@ -1743,6 +1813,27 @@ a {
   font-family: "Cinzel Decorative", "Cinzel", "Anton", serif;
 }
 
+[data-theme="artdeco"] .ticket-header,
+[data-theme="artdeco"] .stub-serial,
+[data-theme="artdeco"] .stub-admit,
+[data-theme="artdeco"] .stub-avg,
+[data-theme="artdeco"] .ticket-credits,
+[data-theme="artdeco"] .ticket-fields,
+[data-theme="artdeco"] .note,
+[data-theme="artdeco"] .rating-value {
+  /* Special Elite reads like a worn 1930s office typewriter — the
+     ribbon-and-ink texture a real Deco-era ticket stub would've been
+     typed on, in place of the shared dot-matrix VT323. */
+  font-family: "Special Elite", "VT323", monospace;
+}
+
+[data-theme="artdeco"] .ticket-plot {
+  /* Crimson Text — an old-style book serif, the kind of body copy a
+     1930s newspaper or magazine review column would have run. */
+  font-family: "Crimson Text", Georgia, serif;
+  font-size: 0.9rem;
+}
+
 [data-theme="artdeco"] .eyebrow {
   color: var(--ink-dim);
   letter-spacing: 0.3em;
@@ -1849,9 +1940,30 @@ a {
 [data-theme="vintage50s"] .price,
 [data-theme="vintage50s"] .leaderboard-rank,
 [data-theme="vintage50s"] .report-heading {
-  /* Alfa Slab One is a real 1950s Soda-Fountain-sign slab: thick, bold,
-     all-caps — the diner-menu-board look period roundups keep citing. */
-  font-family: "Alfa Slab One", "Anton", sans-serif;
+  /* Original Surfer — a rounded, bouncy poolside/surf-shop hand-lettered
+     look, closer to a beach postcard or malt-shop soda label than a
+     straight diner-sign slab. */
+  font-family: "Original Surfer", "Alfa Slab One", "Anton", sans-serif;
+}
+
+[data-theme="vintage50s"] .ticket-header,
+[data-theme="vintage50s"] .stub-serial,
+[data-theme="vintage50s"] .stub-admit,
+[data-theme="vintage50s"] .stub-avg,
+[data-theme="vintage50s"] .ticket-credits,
+[data-theme="vintage50s"] .ticket-fields,
+[data-theme="vintage50s"] .note,
+[data-theme="vintage50s"] .rating-value {
+  /* Real IBM Courier launched in 1955 — dead center of this decade.
+     Clean, businesslike typewriter monospace, in place of VT323. */
+  font-family: "Courier Prime", "VT323", monospace;
+}
+
+[data-theme="vintage50s"] .ticket-plot {
+  /* Lora — a warm, rounded serif with mid-century book/magazine
+     body-copy character, friendlier than a straight news serif. */
+  font-family: "Lora", Georgia, serif;
+  font-size: 0.9rem;
 }
 
 [data-theme="vintage50s"] .eyebrow {
@@ -2016,6 +2128,26 @@ a {
   /* Fascinate is drawn explicitly in the wavy, liquid-lettering style
      of 60s Haight-Ashbury concert posters — the psychedelic signal. */
   font-family: "Fascinate", "Righteous", "Anton", sans-serif;
+}
+
+[data-theme="midcentury"] .ticket-header,
+[data-theme="midcentury"] .stub-serial,
+[data-theme="midcentury"] .stub-admit,
+[data-theme="midcentury"] .stub-avg,
+[data-theme="midcentury"] .ticket-credits,
+[data-theme="midcentury"] .ticket-fields,
+[data-theme="midcentury"] .note,
+[data-theme="midcentury"] .rating-value {
+  /* Space Mono carries 60s American space-age type design — quirky,
+     geometric monospace that reads as Mod/futurist rather than office
+     typewriter, a nice foil to the swirly psychedelic header. */
+  font-family: "Space Mono", "VT323", monospace;
+}
+
+[data-theme="midcentury"] .ticket-plot {
+  /* Jost — a geometric sans with Bauhaus/modernist roots, the same
+     design lineage that fed 60s Mod and space-age graphics. */
+  font-family: "Jost", "Work Sans", sans-serif;
 }
 
 [data-theme="midcentury"] .title {
@@ -2206,6 +2338,26 @@ a {
   font-family: "Poppins", "Anton", sans-serif;
   font-weight: 800;
   letter-spacing: 0.01em;
+}
+
+[data-theme="cinematic70s"] .ticket-header,
+[data-theme="cinematic70s"] .stub-serial,
+[data-theme="cinematic70s"] .stub-admit,
+[data-theme="cinematic70s"] .stub-avg,
+[data-theme="cinematic70s"] .ticket-credits,
+[data-theme="cinematic70s"] .ticket-fields,
+[data-theme="cinematic70s"] .note,
+[data-theme="cinematic70s"] .rating-value {
+  /* Overpass Mono has highway-signage roots — a stamped, utilitarian
+     monospace closer to grindhouse credit blocks than an office
+     typewriter, and distinct from the 30s/50s typewriter choices. */
+  font-family: "Overpass Mono", "VT323", monospace;
+}
+
+[data-theme="cinematic70s"] .ticket-plot {
+  /* Nunito — rounded terminals give it a warm, casual 70s paperback
+     feel, softer than the utilitarian Overpass Mono labels above. */
+  font-family: "Nunito", "Work Sans", sans-serif;
 }
 
 [data-theme="cinematic70s"] .title {

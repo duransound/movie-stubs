@@ -187,7 +187,7 @@ async function ticketElement(movie, index) {
         </div>` : ""}
         <div class="ticket-details">
           <div class="ticket-header">
-            <span class="cinema-name">${CINEMA_NAME}</span>
+            <span class="cinema-name">${movie.venue || CINEMA_NAME}</span>
             <span class="ticket-no">${String(index + 1).padStart(3, "0")}</span>
           </div>
           <div class="title-row">
@@ -201,7 +201,6 @@ async function ticketElement(movie, index) {
           </div>` : ""}
           <div class="ticket-fields">
             <span>watched <b>${formatDate(movie.watchedDate)}</b></span>
-            ${movie.venue ? `<span>venue <b>${movie.venue}</b></span>` : ""}
             <span>${movie.releaseDate ? "released" : "yr"} <b>${movie.releaseDate ? formatDate(movie.releaseDate) : movie.year}</b></span>
             ${details.imdbRating ? `<span>imdb <b>${details.imdbRating}/10</b></span>` : ""}
           </div>

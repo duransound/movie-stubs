@@ -6,107 +6,10 @@ function getOmdbKey() {
   return typeof OMDB_API_KEY !== "undefined" ? OMDB_API_KEY : "";
 }
 
-// ---------- Pitch form: OMDb lookup (same approach as watchlist.js) ----------
-
-let suggestLookupResult = { genre: "", director: "", productionCompany: "" };
-
-function setSuggestLookupStatus(message, isError = false) {
-  const el = document.getElementById("suggest-lookup-status");
-  el.textContent = message;
-  el.classList.toggle("error", isError);
-}
-
-function clearSuggestLookupResults() {
-  const container = document.getElementById("suggest-lookup-results");
-  container.innerHTML = "";
-  container.hidden = true;
-}
-
-function renderSuggestLookupResults(results) {
-  const container = document.getElementById("suggest-lookup-results");
-  container.innerHTML = "";
-
-  results.slice(0, 10).forEach((r) => {
-    const hasPoster = r.Poster && r.Poster !== "N/A";
-    const item = document.createElement("button");
-    item.type = "button";
-    item.className = "lookup-result";
-    item.innerHTML = `
-      ${hasPoster
-        ? `<img src="${r.Poster}" alt="" onerror="this.replaceWith(Object.assign(document.createElement('span'), {className: 'lookup-result-noposter', textContent: 'No art'}))" />`
-        : `<span class="lookup-result-noposter">No art</span>`}
-      <span class="lookup-result-info">
-        <span class="lookup-result-title">${r.Title}</span>
-        <span class="lookup-result-year">${r.Year}</span>
-      </span>
-    `;
-    item.addEventListener("click", () => selectSuggestResult(r.imdbID));
-    container.appendChild(item);
-  });
-
-  container.hidden = results.length === 0;
-}
-
-async function selectSuggestResult(imdbID) {
-  const key = getOmdbKey();
-  setSuggestLookupStatus("Loading details…");
-
-  try {
-    const url = `https://www.omdbapi.com/?apikey=${key}&i=${imdbID}`;
-    const res = await fetch(url);
-    const data = await res.json();
-
-    if (data.Response === "False") {
-      setSuggestLookupStatus(data.Error || "Couldn't load that title.", true);
-      return;
-    }
-
-    document.getElementById("suggest-title").value = data.Title;
-    if (data.Year) document.getElementById("suggest-year").value = parseInt(data.Year, 10) || data.Year;
-
-    suggestLookupResult = {
-      genre: data.Genre && data.Genre !== "N/A" ? data.Genre.split(",")[0].trim() : "",
-      director: data.Director && data.Director !== "N/A" ? data.Director : "",
-      productionCompany: data.Production && data.Production !== "N/A" ? data.Production : "",
-    };
-
-    setSuggestLookupStatus(`Selected "${data.Title}" (${data.Year}).`);
-    clearSuggestLookupResults();
-  } catch (err) {
-    console.error(err);
-    setSuggestLookupStatus("Lookup failed. Check your connection.", true);
-  }
-}
-
-document.getElementById("suggest-lookup-btn").addEventListener("click", async () => {
-  const title = document.getElementById("suggest-title").value.trim();
-  const key = getOmdbKey();
-
-  if (!title) return setSuggestLookupStatus("Enter a title first.", true);
-  if (!key) return setSuggestLookupStatus("No OMDb key configured — see config.public.js.", true);
-
-  setSuggestLookupStatus("Searching…");
-  clearSuggestLookupResults();
-
-  try {
-    const url = `https://www.omdbapi.com/?apikey=${key}&s=${encodeURIComponent(title)}&type=movie`;
-    const res = await fetch(url);
-    const data = await res.json();
-
-    if (data.Response === "False" || !data.Search || data.Search.length === 0) {
-      setSuggestLookupStatus(data.Error || "No matches found on OMDb.", true);
-      return;
-    }
-
-    renderSuggestLookupResults(data.Search);
-    setSuggestLookupStatus(
-      `${data.Search.length} match${data.Search.length === 1 ? "" : "es"} — pick the right one below.`
-    );
-  } catch (err) {
-    console.error(err);
-    setSuggestLookupStatus("Search failed. Check your connection.", true);
-  }
-});
+// ---------- Pitch form ----------
+// Deliberately simple — no OMDb search step, just plain fields and a few
+// dropdowns. (add.html and watchlist.html still have the OMDb lookup, if
+// you want that richer flow elsewhere.)
 
 function showSuggestFormError(message) {
   const el = document.getElementById("suggest-form-error");
@@ -126,6 +29,7 @@ document.getElementById("suggest-form").addEventListener("submit", (e) => {
 
   const title = document.getElementById("suggest-title").value.trim();
   const year = document.getElementById("suggest-year").value.trim();
+  const genre = document.getElementById("suggest-genre").value;
   const mood = document.getElementById("suggest-mood").value;
   const suggestedBy = document.getElementById("suggest-by").value;
 
@@ -134,9 +38,7 @@ document.getElementById("suggest-form").addEventListener("submit", (e) => {
   if (!publishWorkerConfigured()) return showSuggestFormError("Set PUBLISH_WORKER_URL in config.public.js first — see README.");
 
   const entry = { title, year: Number(year) };
-  if (suggestLookupResult.genre) entry.genre = suggestLookupResult.genre;
-  if (suggestLookupResult.director) entry.director = suggestLookupResult.director;
-  if (suggestLookupResult.productionCompany) entry.productionCompany = suggestLookupResult.productionCompany;
+  if (genre) entry.genre = genre;
   if (mood) entry.mood = mood;
   if (suggestedBy) entry.suggestedBy = suggestedBy;
 
@@ -193,9 +95,6 @@ async function publishSuggestionToGithub(entry) {
     );
 
     document.getElementById("suggest-form").reset();
-    suggestLookupResult = { genre: "", director: "", productionCompany: "" };
-    setSuggestLookupStatus("");
-    clearSuggestLookupResults();
 
     // Refresh the picker pool so a suggestion just added is immediately
     // pickable (the worker already wrote it to GitHub for real).

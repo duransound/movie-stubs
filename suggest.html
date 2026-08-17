@@ -6,8 +6,9 @@
 <title>Suggest a movie — Two-Person Picture Show</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=VT323&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=VT323&family=Press+Start+2P&family=Cinzel:wght@500;700&family=Alfa+Slab+One&family=Righteous&family=Bebas+Neue&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css" />
+<script src="theme.js"></script>
 </head>
 <body>
 
@@ -22,6 +23,10 @@
         <a href="watchlist.html">Coming attractions</a>
         <a href="stats.html">Box Office Report</a>
       </nav>
+      <div class="theme-picker">
+        <label for="theme-select">Style</label>
+        <select id="theme-select" aria-label="Ticket style"></select>
+      </div>
     </div>
   </header>
 
@@ -38,22 +43,33 @@
       <form id="suggest-form" class="suggest-section">
         <h2 class="suggest-section-heading">Pitch a movie</h2>
 
-        <div class="form-row">
-          <label for="suggest-title">Title</label>
-          <input type="text" id="suggest-title" placeholder="Everything Everywhere All at Once" />
-          <div class="lookup-row">
-            <button type="button" class="btn secondary" id="suggest-lookup-btn" style="color: var(--text-on-paper); border-color: var(--paper-shadow);">Look up on OMDb</button>
-            <span class="lookup-status" id="suggest-lookup-status"></span>
-          </div>
-          <div class="lookup-results" id="suggest-lookup-results" hidden></div>
-        </div>
-
-        <div class="form-row">
-          <label for="suggest-year">Year</label>
-          <input type="number" id="suggest-year" placeholder="2022" />
-        </div>
-
         <div class="form-cols">
+          <div class="form-row">
+            <label for="suggest-title">Title</label>
+            <input type="text" id="suggest-title" placeholder="Everything Everywhere All at Once" />
+          </div>
+          <div class="form-row">
+            <label for="suggest-year">Year</label>
+            <input type="number" id="suggest-year" placeholder="2022" />
+          </div>
+        </div>
+
+        <div class="picker-filters">
+          <div class="form-row">
+            <label for="suggest-genre">Genre</label>
+            <select id="suggest-genre">
+              <option value="">— none —</option>
+              <option>Action</option>
+              <option>Animation</option>
+              <option>Comedy</option>
+              <option>Drama</option>
+              <option>Horror</option>
+              <option>Romance</option>
+              <option>Sci-Fi</option>
+              <option>Thriller</option>
+              <option>Documentary</option>
+            </select>
+          </div>
           <div class="form-row">
             <label for="suggest-mood">Mood / occasion</label>
             <select id="suggest-mood">

@@ -225,17 +225,41 @@ async function ticketElement(movie, index) {
 
 let allMovies = [];
 
-function applyFiltersAndSort() {
+// Reads a movie's IMDb rating out of the shared OMDb details cache (the
+// same "details2:" cache ticketElement/getOmdbDetails use). Returns -1 for
+// anything not fetched/cached yet so it naturally sorts to the bottom
+// instead of crashing the comparator.
+function cachedImdbRating(movie) {
+  const cached = localStorage.getItem(`details2:${movie.title}:${movie.year}`);
+  if (!cached) return -1;
+  try {
+    const parsed = JSON.parse(cached);
+    return parsed.imdbRating ? parseFloat(parsed.imdbRating) : -1;
+  } catch {
+    return -1;
+  }
+}
+
+async function applyFiltersAndSort() {
   const query = document.getElementById("search").value.trim().toLowerCase();
   const sortMode = document.getElementById("sort").value;
 
   let filtered = allMovies.filter((m) => m.title.toLowerCase().includes(query));
+
+  if (sortMode === "imdb-desc") {
+    // Sorting by IMDb rating needs each movie's OMDb details fetched (or
+    // pulled from cache) first, since that's where imdbRating lives.
+    await Promise.all(filtered.map((m) => getOmdbDetails(m)));
+  }
 
   const sorters = {
     "date-desc": (a, b) => b.watchedDate.localeCompare(a.watchedDate),
     "date-asc": (a, b) => a.watchedDate.localeCompare(b.watchedDate),
     "avg-desc": (a, b) => average(b.ratings) - average(a.ratings),
     "avg-asc": (a, b) => average(a.ratings) - average(b.ratings),
+    "mollie-desc": (a, b) => (b.ratings.mollie ?? -1) - (a.ratings.mollie ?? -1),
+    "ian-desc": (a, b) => (b.ratings.ian ?? -1) - (a.ratings.ian ?? -1),
+    "imdb-desc": (a, b) => cachedImdbRating(b) - cachedImdbRating(a),
     "disagree-desc": (a, b) => {
       const spread = (m) => Math.max(...Object.values(m.ratings)) - Math.min(...Object.values(m.ratings));
       return spread(b) - spread(a);

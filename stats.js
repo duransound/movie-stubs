@@ -246,6 +246,82 @@ async function renderGenreAndDirectors(movies) {
   }
 }
 
+// ---------- Coming Attractions (watchlist) section ----------
+// Everything here comes straight from data/watchlist.json's own fields
+// (genre/mood/suggestedBy) — no OMDb lookup needed, so it always renders
+// regardless of whether an API key is configured.
+
+const WATCHLIST_URL = "data/watchlist.json";
+
+function renderWatchlistOverview(watchlist) {
+  if (!watchlist.length) return;
+
+  const mollieCount = watchlist.filter((m) => m.suggestedBy === "mollie").length;
+  const ianCount = watchlist.filter((m) => m.suggestedBy === "ian").length;
+
+  const tiles = [tile(watchlist.length, `title${watchlist.length === 1 ? "" : "s"} queued up`)];
+  if (mollieCount || ianCount) {
+    tiles.push(tile(`${mollieCount} / ${ianCount}`, "Mollie's / Ian's pitches"));
+  }
+
+  document.getElementById("watchlist-tiles").innerHTML = tiles.join("");
+  document.getElementById("watchlist-overview-section").hidden = false;
+}
+
+function renderWatchlistGenres(watchlist) {
+  const genreCounts = {};
+  watchlist.forEach((m) => {
+    if (!m.genre) return;
+    m.genre.split(",").forEach((g) => {
+      const genre = g.trim();
+      if (!genre) return;
+      genreCounts[genre] = (genreCounts[genre] || 0) + 1;
+    });
+  });
+
+  const entries = Object.entries(genreCounts).sort((a, b) => b[1] - a[1]).slice(0, 8);
+  if (!entries.length) return;
+
+  const max = entries[0][1];
+  document.getElementById("watchlist-genre-chart").innerHTML = entries
+    .map(([g, c]) => barRow(g, c, max, String(c)))
+    .join("");
+  document.getElementById("watchlist-genre-section").hidden = false;
+}
+
+function renderWatchlistMoods(watchlist) {
+  const moodCounts = {};
+  watchlist.forEach((m) => {
+    if (!m.mood) return;
+    moodCounts[m.mood] = (moodCounts[m.mood] || 0) + 1;
+  });
+
+  const entries = Object.entries(moodCounts).sort((a, b) => b[1] - a[1]);
+  if (!entries.length) return;
+
+  const max = entries[0][1];
+  document.getElementById("watchlist-mood-chart").innerHTML = entries
+    .map(([m, c]) => barRow(m, c, max, String(c)))
+    .join("");
+  document.getElementById("watchlist-mood-section").hidden = false;
+}
+
+async function renderWatchlistSections() {
+  let watchlist = [];
+  try {
+    const res = await fetch(WATCHLIST_URL, { cache: "no-store" });
+    watchlist = await res.json();
+  } catch (err) {
+    console.error("Could not load watchlist.json", err);
+    return watchlist;
+  }
+
+  renderWatchlistOverview(watchlist);
+  renderWatchlistGenres(watchlist);
+  renderWatchlistMoods(watchlist);
+  return watchlist;
+}
+
 // ---------- Init ----------
 
 async function init() {
@@ -257,12 +333,22 @@ async function init() {
     console.error("Could not load movies.json", err);
   }
 
-  if (!movies.length) {
+  // Coming Attractions numbers stand on their own, independent of whether
+  // you've logged any tickets yet.
+  const watchlist = await renderWatchlistSections();
+
+  if (!movies.length && !watchlist.length) {
     document.getElementById("report-empty").hidden = false;
     return;
   }
 
   document.getElementById("report-body").hidden = false;
+
+  if (!movies.length) {
+    document.getElementById("stat-tiles").innerHTML =
+      '<p class="empty-state" style="grid-column: 1 / -1;">No tickets logged yet — the numbers above are just what\'s queued up so far.</p>';
+    return;
+  }
 
   renderStatTiles(movies);
   renderYearChart(movies);

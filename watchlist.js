@@ -6,40 +6,62 @@ function getOmdbKey() {
   return typeof OMDB_API_KEY !== "undefined" ? OMDB_API_KEY : "";
 }
 
-// ---------- Poster lookup (same approach as app.js) ----------
+// ---------- Poster + plot lookup ----------
+// Same cache key ("details2:") as app.js/stats.js use for ticket details,
+// so a movie already looked up on the ticket wall doesn't cost a second
+// OMDb call here.
 
-async function getPosterUrl(movie) {
-  if (movie.posterUrl) return movie.posterUrl;
-  const key = getOmdbKey();
-  if (!key) return null;
+const EMPTY_WATCH_DETAILS = { poster: null, plot: "" };
 
-  const cacheKey = `poster:${movie.title}:${movie.year}`;
+async function getWatchDetails(movie) {
+  const cacheKey = `details2:${movie.title}:${movie.year}`;
   const cached = localStorage.getItem(cacheKey);
-  if (cached) return cached === "none" ? null : cached;
+  if (cached) {
+    try {
+      const parsed = JSON.parse(cached);
+      return { poster: parsed.poster || movie.posterUrl || null, plot: parsed.plot || "" };
+    } catch {
+      // fall through and refetch on a bad cache entry
+    }
+  }
+
+  const key = getOmdbKey();
+  if (!key) return { ...EMPTY_WATCH_DETAILS, poster: movie.posterUrl || null };
 
   try {
     const year = String(movie.year).match(/^\d{4}/)?.[0] || "";
     const searchUrl = `https://www.omdbapi.com/?apikey=${key}&t=${encodeURIComponent(movie.title)}${year ? `&y=${year}` : ""}`;
     const res = await fetch(searchUrl);
     const data = await res.json();
+
     let poster = null;
     if (data.Poster && data.Poster !== "N/A") {
       poster = data.Poster;
     } else if (data.imdbID) {
       poster = `https://img.omdbapi.com/?i=${data.imdbID}&h=600&apikey=${key}`;
     }
-    localStorage.setItem(cacheKey, poster || "none");
-    return poster;
+
+    const details = {
+      poster,
+      genre: data.Genre && data.Genre !== "N/A" ? data.Genre : "",
+      director: data.Director && data.Director !== "N/A" ? data.Director : "",
+      plot: data.Plot && data.Plot !== "N/A" ? data.Plot : "",
+      imdbRating: data.imdbRating && data.imdbRating !== "N/A" ? data.imdbRating : "",
+      awards: data.Awards && data.Awards !== "N/A" ? data.Awards : "",
+    };
+
+    localStorage.setItem(cacheKey, JSON.stringify(details));
+    return { poster: details.poster, plot: details.plot };
   } catch (err) {
-    console.warn("Poster fetch failed for", movie.title, err);
-    return null;
+    console.warn("OMDb details fetch failed for", movie.title, err);
+    return { ...EMPTY_WATCH_DETAILS, poster: movie.posterUrl || null };
   }
 }
 
 // ---------- Rendering ----------
 
 async function cardElement(movie) {
-  const poster = await getPosterUrl(movie);
+  const { poster, plot } = await getWatchDetails(movie);
 
   const el = document.createElement("article");
   el.className = "watch-card";
@@ -61,6 +83,7 @@ async function cardElement(movie) {
         ${movie.genre ? `<span class="watch-genre">${movie.genre}</span>` : ""}
       </div>
       ${movie.director ? `<p class="watch-director">Dir. ${movie.director}</p>` : ""}
+      ${plot ? `<p class="watch-plot">${plot}</p>` : ""}
       ${movie.mood || movie.suggestedBy ? `
         <div class="watch-tags">
           ${movie.mood ? `<span class="watch-mood">${movie.mood}</span>` : ""}

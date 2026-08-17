@@ -97,6 +97,11 @@ export default {
       "User-Agent": "movie-stubs-worker",
     };
 
+    // Diagnostics — never includes the token itself, just whether it's
+    // present and how long it is, so config problems are visible without
+    // ever exposing the secret in an error message.
+    const diag = `[repo=${repo || "MISSING"} branch=${branch} path=${path} tokenPresent=${Boolean(env.GITHUB_TOKEN)} tokenLen=${(env.GITHUB_TOKEN || "").length}]`;
+
     // Retry a couple of times in case two devices publish at nearly the same
     // moment and the file's sha goes stale between our read and our write.
     for (let attempt = 0; attempt < 3; attempt++) {
@@ -111,11 +116,14 @@ export default {
         try {
           existing = JSON.parse(base64ToUtf8(fileData.content));
         } catch {
-          return respond(500, { ok: false, error: "Existing file isn't valid JSON." });
+          return respond(500, { ok: false, error: `Existing file isn't valid JSON. ${diag}` });
         }
       } else if (getRes.status !== 404) {
         const errBody = await getRes.json().catch(() => ({}));
-        return respond(getRes.status, { ok: false, error: errBody.message || `GitHub returned ${getRes.status} reading the file.` });
+        return respond(getRes.status, {
+          ok: false,
+          error: `GET step: ${errBody.message || `GitHub returned ${getRes.status}`} ${diag}`,
+        });
       }
       // 404 means the file doesn't exist yet — start from an empty array.
 
@@ -142,9 +150,12 @@ export default {
       }
 
       const errBody = await putRes.json().catch(() => ({}));
-      return respond(putRes.status, { ok: false, error: errBody.message || `GitHub returned ${putRes.status} publishing the file.` });
+      return respond(putRes.status, {
+        ok: false,
+        error: `PUT step (sha ${sha ? "present" : "MISSING — GET may not have found the existing file"}): ${errBody.message || `GitHub returned ${putRes.status}`} ${diag}`,
+      });
     }
 
-    return respond(500, { ok: false, error: "Gave up after a few conflicting writes — try again." });
+    return respond(500, { ok: false, error: `Gave up after a few conflicting writes — try again. ${diag}` });
   },
 };

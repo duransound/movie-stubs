@@ -278,7 +278,9 @@ function updateStats(movies) {
 
 async function init() {
   try {
-    const res = await fetch(DATA_URL);
+    // no-store so returning to the page always shows the latest data instead
+    // of a stale cached copy from before your last Add.
+    const res = await fetch(DATA_URL, { cache: "no-store" });
     allMovies = await res.json();
   } catch (err) {
     console.error("Could not load movies.json", err);

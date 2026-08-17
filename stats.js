@@ -251,7 +251,7 @@ async function renderGenreAndDirectors(movies) {
 async function init() {
   let movies = [];
   try {
-    const res = await fetch(DATA_URL);
+    const res = await fetch(DATA_URL, { cache: "no-store" });
     movies = await res.json();
   } catch (err) {
     console.error("Could not load movies.json", err);

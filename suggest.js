@@ -324,7 +324,7 @@ document.getElementById("picker-pick-btn").addEventListener("click", pickRandom)
 
 async function init() {
   try {
-    const res = await fetch(WATCHLIST_URL);
+    const res = await fetch(WATCHLIST_URL, { cache: "no-store" });
     allWatchlist = await res.json();
   } catch (err) {
     console.error("Could not load watchlist.json", err);

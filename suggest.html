@@ -33,88 +33,96 @@
       already on the list.
     </p>
 
-    <form class="form-card" id="suggest-form">
-      <div class="form-row">
-        <label for="suggest-title">Title</label>
-        <input type="text" id="suggest-title" placeholder="Everything Everywhere All at Once" />
-        <div class="lookup-row">
-          <button type="button" class="btn secondary" id="suggest-lookup-btn" style="color: var(--text-on-paper); border-color: var(--paper-shadow);">Look up on OMDb</button>
-          <span class="lookup-status" id="suggest-lookup-status"></span>
-        </div>
-        <div class="lookup-results" id="suggest-lookup-results" hidden></div>
-      </div>
+    <div class="form-card suggest-card">
 
-      <div class="form-row">
-        <label for="suggest-year">Year</label>
-        <input type="number" id="suggest-year" placeholder="2022" />
-      </div>
+      <form id="suggest-form" class="suggest-section">
+        <h2 class="suggest-section-heading">Pitch a movie</h2>
 
-      <div class="form-cols">
         <div class="form-row">
-          <label for="suggest-mood">Mood / occasion</label>
-          <select id="suggest-mood">
-            <option value="">— none —</option>
-            <option>Cozy night in</option>
-            <option>Date night</option>
-            <option>Popcorn thriller</option>
-            <option>Something we'll actually pay attention to</option>
-            <option>Background noise</option>
-            <option>Comfort watch</option>
-            <option>Tearjerker</option>
-            <option>Comedy relief</option>
-          </select>
+          <label for="suggest-title">Title</label>
+          <input type="text" id="suggest-title" placeholder="Everything Everywhere All at Once" />
+          <div class="lookup-row">
+            <button type="button" class="btn secondary" id="suggest-lookup-btn" style="color: var(--text-on-paper); border-color: var(--paper-shadow);">Look up on OMDb</button>
+            <span class="lookup-status" id="suggest-lookup-status"></span>
+          </div>
+          <div class="lookup-results" id="suggest-lookup-results" hidden></div>
         </div>
+
         <div class="form-row">
-          <label for="suggest-by">Who's suggesting</label>
-          <select id="suggest-by">
-            <option value="">— none —</option>
-            <option value="mollie">Mollie</option>
-            <option value="ian">Ian</option>
-          </select>
+          <label for="suggest-year">Year</label>
+          <input type="number" id="suggest-year" placeholder="2022" />
+        </div>
+
+        <div class="form-cols">
+          <div class="form-row">
+            <label for="suggest-mood">Mood / occasion</label>
+            <select id="suggest-mood">
+              <option value="">— none —</option>
+              <option>Cozy night in</option>
+              <option>Date night</option>
+              <option>Popcorn thriller</option>
+              <option>Something we'll actually pay attention to</option>
+              <option>Background noise</option>
+              <option>Comfort watch</option>
+              <option>Tearjerker</option>
+              <option>Comedy relief</option>
+            </select>
+          </div>
+          <div class="form-row">
+            <label for="suggest-by">Who's suggesting</label>
+            <select id="suggest-by">
+              <option value="">— none —</option>
+              <option value="mollie">Mollie</option>
+              <option value="ian">Ian</option>
+            </select>
+          </div>
+        </div>
+
+        <p class="form-error" id="suggest-form-error" hidden></p>
+
+        <div class="form-actions">
+          <button type="submit" class="btn" id="suggest-add-btn">Add</button>
+        </div>
+
+        <p class="publish-status" id="suggest-publish-status"></p>
+      </form>
+
+      <hr class="suggest-divider" />
+
+      <div class="suggest-section">
+        <h2 class="suggest-section-heading">What should we watch?</h2>
+
+        <div class="picker-filters">
+          <div class="form-row">
+            <label for="picker-genre">Genre</label>
+            <select id="picker-genre"><option value="">Any</option></select>
+          </div>
+          <div class="form-row">
+            <label for="picker-mood">Mood</label>
+            <select id="picker-mood"><option value="">Any</option></select>
+          </div>
+          <div class="form-row">
+            <label for="picker-by">Suggested by</label>
+            <select id="picker-by"><option value="">Any</option></select>
+          </div>
+        </div>
+
+        <div class="form-actions" style="justify-content: center;">
+          <button type="button" class="btn" id="picker-pick-btn">Pick one!</button>
+        </div>
+
+        <p class="picker-empty" id="picker-empty" hidden>Nothing on Coming Attractions matches those filters yet.</p>
+
+        <div class="picker-result" id="picker-result">
+          <div class="picker-result-poster" id="picker-result-poster"></div>
+          <div class="picker-result-info">
+            <p class="picker-result-title" id="picker-result-title"></p>
+            <div class="watch-meta" id="picker-result-meta"></div>
+            <a class="btn secondary watch-log-btn" id="picker-result-log" href="#">Log this</a>
+          </div>
         </div>
       </div>
 
-      <p class="form-error" id="suggest-form-error" hidden></p>
-
-      <div class="form-actions">
-        <button type="submit" class="btn" id="suggest-add-btn">Add</button>
-      </div>
-
-      <p class="publish-status" id="suggest-publish-status"></p>
-    </form>
-
-    <h2 class="report-heading" style="text-align: center; margin: 3rem 0 1rem;">What should we watch?</h2>
-
-    <div class="picker-card">
-      <div class="picker-filters">
-        <div class="form-row">
-          <label for="picker-genre">Genre</label>
-          <select id="picker-genre"><option value="">Any</option></select>
-        </div>
-        <div class="form-row">
-          <label for="picker-mood">Mood</label>
-          <select id="picker-mood"><option value="">Any</option></select>
-        </div>
-        <div class="form-row">
-          <label for="picker-by">Suggested by</label>
-          <select id="picker-by"><option value="">Any</option></select>
-        </div>
-      </div>
-
-      <div class="form-actions" style="justify-content: center;">
-        <button type="button" class="btn" id="picker-pick-btn">Pick one!</button>
-      </div>
-
-      <p class="picker-empty" id="picker-empty" hidden>Nothing on Coming Attractions matches those filters yet.</p>
-
-      <div class="picker-result" id="picker-result">
-        <div class="picker-result-poster" id="picker-result-poster"></div>
-        <div class="picker-result-info">
-          <p class="picker-result-title" id="picker-result-title"></p>
-          <div class="watch-meta" id="picker-result-meta"></div>
-          <a class="btn secondary watch-log-btn" id="picker-result-log" href="#">Log this</a>
-        </div>
-      </div>
     </div>
 
   </main>

@@ -40,14 +40,13 @@ function serialFor(title, year) {
   return String(h % 100000).padStart(5, "0");
 }
 
-function barcodeWidths(title, count = 30) {
-  const h = hashString(title);
-  const widths = [];
-  for (let i = 0; i < count; i++) {
-    const v = (h >> (i % 24)) & 0b11;
-    widths.push(4 + v * 4);
-  }
-  return widths;
+// Renders the movie's own title as barcode-styled text via the
+// "Libre Barcode 39" font (Code 39 only encodes A-Z, 0-9, space, and a
+// handful of punctuation marks, and every string needs a "*" start/stop
+// character on each end to render as a proper-looking barcode).
+function barcodeText(title) {
+  const cleaned = title.toUpperCase().replace(/[^A-Z0-9 \-.$/+%]/g, "");
+  return `*${cleaned || "MOVIE"}*`;
 }
 
 function average(ratings) {
@@ -138,11 +137,6 @@ function ratingBlock(raterKey, value) {
   `;
 }
 
-function barcode(title) {
-  const widths = barcodeWidths(title);
-  return widths.map((h) => `<span style="height:${h}px"></span>`).join("");
-}
-
 // Parses OMDb's free-text "Awards" field (e.g. "Won 7 Oscars. 408 wins &
 // 382 nominations total" or "Nominated for 6 Oscars. 79 wins & 271
 // nominations total") to auto-detect Oscar wins/nominations — no manual
@@ -181,7 +175,7 @@ async function ticketElement(movie, index) {
   el.innerHTML = `
     <div class="stub">
       <span class="stub-serial">NO. ${serial}</span>
-      <span class="stub-admit">Admit two</span>
+      <span class="stub-admit">Admit</span>
       <span class="stub-avg">${avg.toFixed(1)}</span>
     </div>
     <div class="perforation"></div>
@@ -220,7 +214,7 @@ async function ticketElement(movie, index) {
       ${movie.note ? `<p class="note">&ldquo;${movie.note}&rdquo;</p>` : ""}
       <div class="ticket-footer">
         <span class="price">ADM ${avg.toFixed(1)}/5.0</span>
-        <div class="barcode-h">${barcode(movie.title)}</div>
+        <div class="barcode-h">${barcodeText(movie.title)}</div>
       </div>
     </div>
   `;

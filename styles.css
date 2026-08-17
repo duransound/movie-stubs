@@ -201,9 +201,9 @@ a {
   position: absolute;
   top: -0.15rem;
   right: 0.25rem;
-  width: 56px;
-  height: 56px;
-  opacity: 0.68;
+  width: 151px;
+  height: 151px;
+  opacity: 0.15;
   transform: rotate(-9deg);
   mix-blend-mode: multiply;
   pointer-events: none;
@@ -1617,7 +1617,7 @@ a {
    so it reads as a pale phosphor mark rather than disappearing. */
 [data-theme="socal"] .ticket-stamp {
   mix-blend-mode: screen;
-  opacity: 0.5;
+  opacity: 0.15;
 }
 
 [data-theme="socal"] .ticket::after,
@@ -1844,7 +1844,7 @@ a {
    instead, reading like a gold-ish foil press instead of ink-on-paper. */
 [data-theme="artdeco"] .ticket-stamp {
   mix-blend-mode: screen;
-  opacity: 0.45;
+  opacity: 0.15;
 }
 
 [data-theme="artdeco"] .ticket::after,
@@ -2376,7 +2376,7 @@ a {
    so screen instead, reading like a warm sepia press mark. */
 [data-theme="cinematic70s"] .ticket-stamp {
   mix-blend-mode: screen;
-  opacity: 0.45;
+  opacity: 0.15;
 }
 
 [data-theme="cinematic70s"] .ticket,

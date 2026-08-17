@@ -1,11 +1,11 @@
 [
   {
-    "title": "T\u00e1r",
+    "title": "Tár",
     "year": 2022,
     "watchedDate": "2023-02-01",
     "ratings": {
       "mollie": 4.5,
-      "ian": 5.0
+      "ian": 5
     },
     "note": "Incredible performance by Blanchett.. I like the way the movie used time the same way that a conductor would in an orchestra."
   },
@@ -14,7 +14,7 @@
     "year": 2022,
     "watchedDate": "2023-03-09",
     "ratings": {
-      "mollie": 4.0,
+      "mollie": 4,
       "ian": 4.5
     }
   },
@@ -41,8 +41,8 @@
     "year": 1994,
     "watchedDate": "2023-02-23",
     "ratings": {
-      "mollie": 2.0,
-      "ian": 3.0
+      "mollie": 2,
+      "ian": 3
     }
   },
   {
@@ -50,7 +50,7 @@
     "year": 1989,
     "watchedDate": "2023-10-16",
     "ratings": {
-      "mollie": 3.0,
+      "mollie": 3,
       "ian": 3.5
     }
   },
@@ -77,8 +77,8 @@
     "year": 2017,
     "watchedDate": "2023-01-26",
     "ratings": {
-      "mollie": 4.0,
-      "ian": 4.0
+      "mollie": 4,
+      "ian": 4
     }
   },
   {
@@ -87,7 +87,7 @@
     "watchedDate": "2023-01-07",
     "ratings": {
       "mollie": 3.5,
-      "ian": 4.0
+      "ian": 4
     }
   },
   {
@@ -95,7 +95,7 @@
     "year": 2022,
     "watchedDate": "2022-12-18",
     "ratings": {
-      "mollie": 5.0,
+      "mollie": 5,
       "ian": 4.5
     },
     "note": "SHOULD HAVE WON EVERYTHING"
@@ -105,8 +105,8 @@
     "year": 2014,
     "watchedDate": "2023-03-03",
     "ratings": {
-      "mollie": 4.0,
-      "ian": 4.0
+      "mollie": 4,
+      "ian": 4
     }
   },
   {
@@ -115,7 +115,7 @@
     "watchedDate": "2022-11-10",
     "ratings": {
       "mollie": 4.5,
-      "ian": 4.0
+      "ian": 4
     }
   },
   {
@@ -123,8 +123,8 @@
     "year": 2019,
     "watchedDate": "2022-11-04",
     "ratings": {
-      "mollie": 4.0,
-      "ian": 4.0
+      "mollie": 4,
+      "ian": 4
     }
   },
   {
@@ -132,7 +132,7 @@
     "year": 2007,
     "watchedDate": "2023-02-10",
     "ratings": {
-      "mollie": 4.0,
+      "mollie": 4,
       "ian": 4.5
     }
   },
@@ -141,8 +141,21 @@
     "year": 2023,
     "watchedDate": "2023-04-15",
     "ratings": {
-      "mollie": 4.0,
-      "ian": 4.0
+      "mollie": 4,
+      "ian": 4
     }
+  },
+  {
+    "title": "Top Gun",
+    "year": 1986,
+    "watchedDate": "2026-05-13",
+    "ratings": {
+      "mollie": 5,
+      "ian": 4
+    },
+    "venue": "Cinemark Daly City",
+    "note": "Shaking seats!",
+    "posterUrl": "https://m.media-amazon.com/images/M/MV5BZmVjNzQ3MjYtYTZiNC00Y2YzLWExZTEtMTM2ZDllNDI0MzgyXkEyXkFqcGc@._V1_QL75_UX380_CR0,12,380,562_.jpg",
+    "releaseDate": "1986-05-16"
   }
 ]

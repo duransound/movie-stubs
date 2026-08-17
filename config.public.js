@@ -20,11 +20,11 @@ const OMDB_API_KEY = "ff7acc65";
 //
 // Until you deploy one, this stays a placeholder and the Add buttons show
 // as disabled with an explanation.
-const PUBLISH_WORKER_URL = "";
+const PUBLISH_WORKER_URL = "https://movie-stub-publish.iduran87.workers.dev";
 
 // A made-up string that must match the SITE_KEY you set on the Worker. This
 // is NOT a real secret — it ships in public code just like everything else
 // in this file — it only exists to keep random internet bots from spamming
 // the publish endpoint. Change it to anything you like, as long as both
 // sides match.
-const PUBLISH_SITE_KEY = "movie-stubs-8f2k";
+const PUBLISH_SITE_KEY = "7a80an4)n:m";

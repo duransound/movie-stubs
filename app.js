@@ -209,6 +209,9 @@ async function ticketElement(movie, index) {
       </div>
       <div class="ratings-row">
         ${raterKeys.map((k) => ratingBlock(k, movie.ratings[k])).join("")}
+        <div class="ticket-stamp">
+          <img src="logo/MI_ticket_stamp_v2.png" alt="" />
+        </div>
       </div>
       ${movie.note ? `<p class="note">&ldquo;${movie.note}&rdquo;</p>` : ""}
       <div class="ticket-footer">

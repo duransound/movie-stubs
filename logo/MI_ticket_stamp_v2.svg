@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="dist13" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02 0.024" numOctaves="3" seed="13" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="7" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <path id="topArc13" d="M 94,194.7 A 106,106 0 0 1 306,194.7" fill="none"/>
+    <path id="bottomArc13" d="M 112,208.8 A 88,88 0 0 0 288,208.8" fill="none"/>
+    <mask id="filmMask13">
+      <circle cx="200" cy="200" r="180" fill="white"/>
+      <circle cx="200" cy="200" r="126" fill="black"/>
+      <rect x="366.00" y="192.00" width="10.00" height="16.00" rx="1.4" transform="rotate(90.00 371.00 200.00)" fill="black"/>
+      <rect x="359.07" y="240.18" width="10.00" height="16.00" rx="1.4" transform="rotate(106.36 364.07 248.18)" fill="black"/>
+      <rect x="338.85" y="284.45" width="10.00" height="16.00" rx="1.4" transform="rotate(122.73 343.85 292.45)" fill="black"/>
+      <rect x="306.98" y="321.23" width="10.00" height="16.00" rx="1.4" transform="rotate(139.09 311.98 329.23)" fill="black"/>
+      <rect x="266.04" y="347.55" width="10.00" height="16.00" rx="1.4" transform="rotate(155.45 271.04 355.55)" fill="black"/>
+      <rect x="219.34" y="361.26" width="10.00" height="16.00" rx="1.4" transform="rotate(171.82 224.34 369.26)" fill="black"/>
+      <rect x="170.66" y="361.26" width="10.00" height="16.00" rx="1.4" transform="rotate(188.18 175.66 369.26)" fill="black"/>
+      <rect x="123.96" y="347.55" width="10.00" height="16.00" rx="1.4" transform="rotate(204.55 128.96 355.55)" fill="black"/>
+      <rect x="83.02" y="321.23" width="10.00" height="16.00" rx="1.4" transform="rotate(220.91 88.02 329.23)" fill="black"/>
+      <rect x="51.15" y="284.45" width="10.00" height="16.00" rx="1.4" transform="rotate(237.27 56.15 292.45)" fill="black"/>
+      <rect x="30.93" y="240.18" width="10.00" height="16.00" rx="1.4" transform="rotate(253.64 35.93 248.18)" fill="black"/>
+      <rect x="24.00" y="192.00" width="10.00" height="16.00" rx="1.4" transform="rotate(270.00 29.00 200.00)" fill="black"/>
+      <rect x="30.93" y="143.82" width="10.00" height="16.00" rx="1.4" transform="rotate(286.36 35.93 151.82)" fill="black"/>
+      <rect x="51.15" y="99.55" width="10.00" height="16.00" rx="1.4" transform="rotate(302.73 56.15 107.55)" fill="black"/>
+      <rect x="83.02" y="62.77" width="10.00" height="16.00" rx="1.4" transform="rotate(319.09 88.02 70.77)" fill="black"/>
+      <rect x="123.96" y="36.45" width="10.00" height="16.00" rx="1.4" transform="rotate(335.45 128.96 44.45)" fill="black"/>
+      <rect x="170.66" y="22.74" width="10.00" height="16.00" rx="1.4" transform="rotate(351.82 175.66 30.74)" fill="black"/>
+      <rect x="219.34" y="22.74" width="10.00" height="16.00" rx="1.4" transform="rotate(368.18 224.34 30.74)" fill="black"/>
+      <rect x="266.04" y="36.45" width="10.00" height="16.00" rx="1.4" transform="rotate(384.55 271.04 44.45)" fill="black"/>
+      <rect x="306.98" y="62.77" width="10.00" height="16.00" rx="1.4" transform="rotate(400.91 311.98 70.77)" fill="black"/>
+      <rect x="338.85" y="99.55" width="10.00" height="16.00" rx="1.4" transform="rotate(417.27 343.85 107.55)" fill="black"/>
+      <rect x="359.07" y="143.82" width="10.00" height="16.00" rx="1.4" transform="rotate(433.64 364.07 151.82)" fill="black"/>
+      <rect x="330.00" y="192.00" width="10.00" height="16.00" rx="1.4" transform="rotate(90.00 335.00 200.00)" fill="black"/>
+      <rect x="324.53" y="230.03" width="10.00" height="16.00" rx="1.4" transform="rotate(106.36 329.53 238.03)" fill="black"/>
+      <rect x="308.57" y="264.99" width="10.00" height="16.00" rx="1.4" transform="rotate(122.73 313.57 272.99)" fill="black"/>
+      <rect x="283.41" y="294.03" width="10.00" height="16.00" rx="1.4" transform="rotate(139.09 288.41 302.03)" fill="black"/>
+      <rect x="251.08" y="314.80" width="10.00" height="16.00" rx="1.4" transform="rotate(155.45 256.08 322.80)" fill="black"/>
+      <rect x="214.21" y="325.63" width="10.00" height="16.00" rx="1.4" transform="rotate(171.82 219.21 333.63)" fill="black"/>
+      <rect x="175.79" y="325.63" width="10.00" height="16.00" rx="1.4" transform="rotate(188.18 180.79 333.63)" fill="black"/>
+      <rect x="138.92" y="314.80" width="10.00" height="16.00" rx="1.4" transform="rotate(204.55 143.92 322.80)" fill="black"/>
+      <rect x="106.59" y="294.03" width="10.00" height="16.00" rx="1.4" transform="rotate(220.91 111.59 302.03)" fill="black"/>
+      <rect x="81.43" y="264.99" width="10.00" height="16.00" rx="1.4" transform="rotate(237.27 86.43 272.99)" fill="black"/>
+      <rect x="65.47" y="230.03" width="10.00" height="16.00" rx="1.4" transform="rotate(253.64 70.47 238.03)" fill="black"/>
+      <rect x="60.00" y="192.00" width="10.00" height="16.00" rx="1.4" transform="rotate(270.00 65.00 200.00)" fill="black"/>
+      <rect x="65.47" y="153.97" width="10.00" height="16.00" rx="1.4" transform="rotate(286.36 70.47 161.97)" fill="black"/>
+      <rect x="81.43" y="119.01" width="10.00" height="16.00" rx="1.4" transform="rotate(302.73 86.43 127.01)" fill="black"/>
+      <rect x="106.59" y="89.97" width="10.00" height="16.00" rx="1.4" transform="rotate(319.09 111.59 97.97)" fill="black"/>
+      <rect x="138.92" y="69.20" width="10.00" height="16.00" rx="1.4" transform="rotate(335.45 143.92 77.20)" fill="black"/>
+      <rect x="175.79" y="58.37" width="10.00" height="16.00" rx="1.4" transform="rotate(351.82 180.79 66.37)" fill="black"/>
+      <rect x="214.21" y="58.37" width="10.00" height="16.00" rx="1.4" transform="rotate(368.18 219.21 66.37)" fill="black"/>
+      <rect x="251.08" y="69.20" width="10.00" height="16.00" rx="1.4" transform="rotate(384.55 256.08 77.20)" fill="black"/>
+      <rect x="283.41" y="89.97" width="10.00" height="16.00" rx="1.4" transform="rotate(400.91 288.41 97.97)" fill="black"/>
+      <rect x="308.57" y="119.01" width="10.00" height="16.00" rx="1.4" transform="rotate(417.27 313.57 127.01)" fill="black"/>
+      <rect x="324.53" y="153.97" width="10.00" height="16.00" rx="1.4" transform="rotate(433.64 329.53 161.97)" fill="black"/>
+    </mask>
+  </defs>
+
+  <g transform="rotate(-4 200 200)" filter="url(#dist13)">
+    <circle cx="200" cy="200" r="180" fill="#16213B" mask="url(#filmMask13)"/>
+    <circle cx="200" cy="200" r="180" fill="none" stroke="#16213B" stroke-width="1.5"/>
+    <circle cx="200" cy="200" r="126" fill="none" stroke="#16213B" stroke-width="1.5"/>
+
+    <text font-family="Special Elite, monospace" font-size="15" letter-spacing="3" fill="#16213B">
+      <textPath href="#topArc13" startOffset="50%" text-anchor="middle">ADMIT ONE</textPath>
+    </text>
+    <text font-family="Special Elite, monospace" font-size="13" letter-spacing="3.5" fill="#16213B">
+      <textPath href="#bottomArc13" startOffset="50%" text-anchor="middle">MOVIE STUB</textPath>
+    </text>
+
+    <g font-family="Bitter, Georgia, serif" font-weight="900" fill="#16213B" text-anchor="middle">
+      <text x="145" y="216" font-size="76">M</text>
+      <text x="200" y="194.72" font-size="24" font-family="Special Elite, monospace" font-weight="400">&amp;</text>
+      <text x="256" y="216" font-size="76">I</text>
+    </g>
+  </g>
+</svg>

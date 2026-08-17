@@ -180,6 +180,7 @@ a {
 
 .ticket {
   display: flex;
+  position: relative;
   background: var(--paper);
   color: var(--ink);
   border-radius: var(--radius);
@@ -190,6 +191,29 @@ a {
   /* Guarantees the tear-off stub always has room for its vertical
      "Admit" text, even on short cards with little poster/plot content. */
   min-height: 260px;
+}
+
+/* M&I ink stamp — sits in the open space to the right of the ratings
+   (that row rarely fills the ticket's full width), clear of the price/
+   barcode line below. Semi-transparent and rotated for a hand-stamped
+   feel. Positioned relative to .ratings-row, not the whole ticket. */
+.ticket-stamp {
+  position: absolute;
+  top: -0.15rem;
+  right: 0.25rem;
+  width: 56px;
+  height: 56px;
+  opacity: 0.68;
+  transform: rotate(-9deg);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.ticket-stamp img {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 .ticket:hover {
@@ -402,6 +426,7 @@ a {
 /* Ratings */
 
 .ratings-row {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 0.35rem;
@@ -1587,6 +1612,14 @@ a {
   overflow: hidden;
 }
 
+/* The navy ink stamp uses mix-blend-mode: multiply by default, which
+   would vanish against this theme's near-black paper — screen instead,
+   so it reads as a pale phosphor mark rather than disappearing. */
+[data-theme="socal"] .ticket-stamp {
+  mix-blend-mode: screen;
+  opacity: 0.5;
+}
+
 [data-theme="socal"] .ticket::after,
 [data-theme="socal"] .watch-card::after,
 [data-theme="socal"] .form-card::after,
@@ -1805,6 +1838,13 @@ a {
 [data-theme="artdeco"] .director-list li {
   position: relative;
   border: 1px solid var(--paper-shadow);
+}
+
+/* Lacquer-black paper — multiply would erase the navy stamp, so screen
+   instead, reading like a gold-ish foil press instead of ink-on-paper. */
+[data-theme="artdeco"] .ticket-stamp {
+  mix-blend-mode: screen;
+  opacity: 0.45;
 }
 
 [data-theme="artdeco"] .ticket::after,
@@ -2330,6 +2370,13 @@ a {
   /* Nunito — rounded terminals give it a warm, casual 70s paperback
      feel, softer than the utilitarian Overpass Mono labels above. */
   font-family: "Nunito", "Work Sans", sans-serif;
+}
+
+/* Dark cocoa-brown paper — multiply would nearly erase the navy stamp,
+   so screen instead, reading like a warm sepia press mark. */
+[data-theme="cinematic70s"] .ticket-stamp {
+  mix-blend-mode: screen;
+  opacity: 0.45;
 }
 
 [data-theme="cinematic70s"] .ticket,

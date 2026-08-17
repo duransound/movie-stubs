@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="300" height="300" viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="inkDistress2" x="-20%" y="-20%" width="140%" height="140%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.02 0.025" numOctaves="3" seed="11" result="noise"/>
+      <feDisplacementMap in="SourceGraphic" in2="noise" scale="8" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <path id="topArcT" d="M 60,205 A 140,140 0 0 1 340,205" fill="none"/>
+    <path id="bottomArcT" d="M 78,235 A 140,140 0 0 0 322,235" fill="none"/>
+  </defs>
+
+  <g transform="rotate(-3 200 200)" filter="url(#inkDistress2)">
+    <g fill="none" stroke="#16213B" stroke-linecap="round">
+      <circle cx="200" cy="200" r="172" stroke-width="7"/>
+      <circle cx="200" cy="200" r="128" stroke-width="2.5"/>
+    </g>
+
+    <text font-family="Special Elite, monospace" font-size="21" letter-spacing="5" fill="#16213B">
+      <textPath href="#topArcT" startOffset="50%" text-anchor="middle">ADMIT ONE</textPath>
+    </text>
+    <text font-family="Special Elite, monospace" font-size="16" letter-spacing="4" fill="#16213B">
+      <textPath href="#bottomArcT" startOffset="50%" text-anchor="middle">MOVIE STUB</textPath>
+    </text>
+
+    <g font-family="Bitter, Georgia, serif" font-weight="900" fill="#16213B">
+      <text x="165" y="228" font-size="118" text-anchor="middle">M</text>
+      <text x="232" y="228" font-size="118" text-anchor="middle">I</text>
+    </g>
+  </g>
+</svg>

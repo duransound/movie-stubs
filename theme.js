@@ -7,6 +7,10 @@
 const THEMES = [
   { value: "classic", label: "90s Ticket Stub (Classic)" },
   { value: "socal", label: "SoCal 80s Computer" },
+  { value: "artdeco", label: "1930s Art Deco" },
+  { value: "vintage50s", label: "1950s Vintage" },
+  { value: "midcentury", label: "1960s Mid-Century Modern" },
+  { value: "cinematic70s", label: "1970s Super Cinematic" },
 ];
 
 const THEME_KEY = "movieStubTheme";

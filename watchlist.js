@@ -43,6 +43,10 @@ async function cardElement(movie) {
 
   const el = document.createElement("article");
   el.className = "watch-card";
+  if (justAddedKey && `${movie.title}|${movie.year}` === justAddedKey) {
+    el.classList.add("just-added");
+    el.id = "watch-just-added-card";
+  }
 
   el.innerHTML = `
     <div class="watch-poster">
@@ -57,6 +61,12 @@ async function cardElement(movie) {
         ${movie.genre ? `<span class="watch-genre">${movie.genre}</span>` : ""}
       </div>
       ${movie.director ? `<p class="watch-director">Dir. ${movie.director}</p>` : ""}
+      ${movie.mood || movie.suggestedBy ? `
+        <div class="watch-tags">
+          ${movie.mood ? `<span class="watch-mood">${movie.mood}</span>` : ""}
+          ${movie.suggestedBy ? `<span class="watch-suggested-by ${movie.suggestedBy}">${movie.suggestedBy === "mollie" ? "Mollie's pick" : "Ian's pick"}</span>` : ""}
+        </div>
+      ` : ""}
       <a class="btn secondary watch-log-btn" href="add.html?title=${encodeURIComponent(movie.title)}&year=${encodeURIComponent(movie.year)}">Log this</a>
     </div>
   `;
@@ -67,6 +77,7 @@ async function cardElement(movie) {
 // ---------- Add a movie ----------
 
 let watchLookupResult = { genre: "", director: "", productionCompany: "" };
+let justAddedKey = null;
 
 function setWatchLookupStatus(message, isError = false) {
   const el = document.getElementById("watch-lookup-status");
@@ -221,10 +232,11 @@ function base64ToUtf8(b64) {
   return new TextDecoder().decode(bytes);
 }
 
-function setWatchPublishStatus(message, isError = false) {
+function setWatchPublishStatus(message, isError = false, isSuccess = false) {
   const el = document.getElementById("watch-publish-status");
   el.textContent = message;
   el.classList.toggle("error", isError);
+  el.classList.toggle("success", isSuccess);
 }
 
 async function publishWatchEntryToGithub(entry) {
@@ -280,7 +292,9 @@ async function publishWatchEntryToGithub(entry) {
     }
 
     setWatchPublishStatus(
-      `Added "${entry.title}"! Pushed straight to ${GITHUB_REPO}. GitHub Pages will update in a minute or two.`
+      `✓ Added "${entry.title}" — look for the gold "Just added" card up top.`,
+      false,
+      true
     );
 
     document.getElementById("watch-add-form").reset();
@@ -288,9 +302,21 @@ async function publishWatchEntryToGithub(entry) {
     setWatchLookupStatus("");
     clearWatchLookupResults();
 
-    // Reflect the new title in the grid right away without a full reload.
+    // Reflect the new title in the grid right away without a full reload,
+    // clear any active search so the new entry can't be filtered out of view,
+    // and flag it so it renders at the top with a "Just added" highlight.
     allWatchlist = merged;
-    applyFilter();
+    justAddedKey = `${entry.title}|${entry.year}`;
+    document.getElementById("watch-search").value = "";
+    await applyFilter();
+
+    const newCard = document.getElementById("watch-just-added-card");
+    if (newCard) newCard.scrollIntoView({ behavior: "smooth", block: "center" });
+
+    // Drop the highlight after a bit so it doesn't stick around forever.
+    setTimeout(() => {
+      justAddedKey = null;
+    }, 8000);
   } catch (err) {
     console.error(err);
     setWatchPublishStatus(err.message || "Add failed. Check your token and repo settings in config.js.", true);
@@ -308,11 +334,16 @@ if (!githubConfigured()) {
 
 let allWatchlist = [];
 
-function applyFilter() {
+async function applyFilter() {
   const query = document.getElementById("watch-search").value.trim().toLowerCase();
-  const filtered = allWatchlist.filter((m) => m.title.toLowerCase().includes(query));
+  // Newest-added titles land at the end of allWatchlist, so reverse to show
+  // the most recently added movie first instead of buried at the bottom.
+  const filtered = allWatchlist
+    .filter((m) => m.title.toLowerCase().includes(query))
+    .slice()
+    .reverse();
 
-  renderGrid(filtered);
+  await renderGrid(filtered);
   updateStats(filtered);
 
   const emptyState = document.getElementById("watch-empty-state");

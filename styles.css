@@ -518,6 +518,33 @@ a {
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  position: relative;
+}
+
+.watch-card.just-added {
+  animation: just-added-glow 2.5s ease-out 1;
+}
+
+.watch-card.just-added::before {
+  content: "Just added";
+  position: absolute;
+  top: 0.5rem;
+  left: 0.5rem;
+  z-index: 1;
+  font-family: "VT323", monospace;
+  font-size: 0.85rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.15rem 0.5rem;
+  border-radius: 3px;
+  background: linear-gradient(135deg, #f6d878, #c9971f);
+  color: #3a2a05;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes just-added-glow {
+  0% { box-shadow: 0 0 0 3px #f6d878, 0 8px 16px rgba(0, 0, 0, 0.3); }
+  100% { box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3); }
 }
 
 .watch-poster {
@@ -596,6 +623,113 @@ a {
   padding: 0.35rem 0.8rem;
 }
 
+.watch-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+}
+
+.watch-mood,
+.watch-suggested-by {
+  font-family: "VT323", monospace;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  border-radius: 3px;
+  padding: 0 0.35rem;
+}
+
+.watch-mood {
+  border: 1px solid var(--paper-shadow);
+  color: var(--ink-dim);
+}
+
+.watch-suggested-by.mollie {
+  background: var(--mollie-dim);
+  color: var(--mollie);
+}
+
+.watch-suggested-by.ian {
+  background: var(--ian-dim);
+  color: var(--ian);
+}
+
+/* ============================================================
+   suggest.html — pitch form + random picker
+   ============================================================ */
+
+.picker-card {
+  max-width: 560px;
+  margin: 0 auto 2.5rem;
+  background: var(--paper);
+  color: var(--ink);
+  border-radius: var(--radius);
+  padding: 1.75rem;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.picker-filters {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1rem;
+}
+
+.picker-result {
+  display: none;
+  gap: 1rem;
+  align-items: flex-start;
+  background: var(--paper-shadow);
+  border-radius: var(--radius);
+  padding: 1rem;
+  animation: just-added-glow 1.6s ease-out 1;
+}
+
+.picker-result.visible {
+  display: flex;
+}
+
+.picker-result-poster {
+  width: 90px;
+  aspect-ratio: 2 / 3;
+  border-radius: 4px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--paper);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.picker-result-poster img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.picker-result-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.picker-result-title {
+  font-family: "Anton", sans-serif;
+  text-transform: uppercase;
+  font-size: 1.2rem;
+  color: var(--maroon);
+  margin: 0;
+}
+
+.picker-empty {
+  font-family: "VT323", monospace;
+  color: var(--ink-dim);
+  font-size: 1.05rem;
+}
+
 /* ============================================================
    add.html — form styling
    ============================================================ */
@@ -644,6 +778,7 @@ a {
 .form-row input[type="text"],
 .form-row input[type="number"],
 .form-row input[type="date"],
+.form-row select,
 .form-row textarea {
   font-family: "Work Sans", sans-serif;
   font-size: 0.95rem;
@@ -870,6 +1005,11 @@ a {
 
 .publish-status.error {
   color: #e08a80;
+}
+
+.publish-status.success {
+  color: #f6d878;
+  font-size: 1.15rem;
 }
 
 /* ============================================================

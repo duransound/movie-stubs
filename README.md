@@ -247,11 +247,40 @@ Or skip the form and edit `data/watchlist.json` directly:
   "title": "Poor Things",
   "year": 2023,
   "genre": "Comedy",
-  "director": "Yorgos Lanthimos"
+  "director": "Yorgos Lanthimos",
+  "mood": "Date night",
+  "suggestedBy": "mollie"
 }
 ```
 
-`genre`, `director`, and `productionCompany` are all optional.
+`genre`, `director`, `productionCompany`, `mood`, and `suggestedBy` are all
+optional. `mood` is free text (the `suggest.html` form uses a fixed
+dropdown list, but hand-editing the JSON isn't restricted to those exact
+words). `suggestedBy` should be `mollie` or `ian` to match the color-coded
+tag styling.
+
+Newly-added entries always render at the **top** of the Coming Attractions
+grid with a gold "Just added" highlight for a few seconds, whether added via
+`watchlist.html` or `suggest.html`.
+
+## Suggesting a movie
+
+`suggest.html` has two things on it:
+
+1. **A pitch form** — same lookup flow as `add.html`/`watchlist.html` (search
+   OMDb, pick the right title/year from the list), plus two dropdowns: a
+   **mood/occasion** tag (cozy night in, date night, background noise, etc.)
+   and **who's suggesting** (Mollie or Ian). Hitting **Add** commits it to
+   `data/watchlist.json` — it shows up on Coming Attractions right away, with
+   its mood and "X's pick" tag visible on the card.
+2. **A random picker** ("What should we watch?") — filter dropdowns for
+   genre, mood, and who suggested it (all populated automatically from
+   what's already on the watchlist), then hit **Pick one!** to get a random
+   title from whatever matches. Its "Log this" button jumps to `add.html`
+   the same way watchlist cards do.
+
+Needs the same `GITHUB_TOKEN` setup as the other Add buttons to publish
+pitches; the random picker works with no token, since it only reads.
 
 ## Box Office Report (stats)
 
@@ -279,6 +308,8 @@ Movie Stubs/
 ├── add.js
 ├── watchlist.html       coming attractions / want-to-see list
 ├── watchlist.js
+├── suggest.html          pitch form + random "what should we watch" picker
+├── suggest.js
 ├── stats.html            Box Office Report (stats page)
 ├── stats.js
 ├── styles.css

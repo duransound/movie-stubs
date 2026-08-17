@@ -157,6 +157,11 @@ a {
   margin-left: auto;
 }
 
+.watch-stats-standalone {
+  margin: 0 0 1.5rem;
+  text-align: center;
+}
+
 .empty-state {
   text-align: center;
   color: var(--paper-shadow);

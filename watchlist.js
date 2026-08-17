@@ -264,12 +264,10 @@ async function publishWatchEntryToGithub(entry) {
 
     // Reflect the new title in the grid right away without a full reload
     // (the worker already wrote it to GitHub for real — this is just so you
-    // see it immediately instead of waiting on a refetch), clear any active
-    // search so it can't be filtered out of view, and flag it so it renders
-    // at the top with a "Just added" highlight.
+    // see it immediately instead of waiting on a refetch), and flag it so
+    // it renders at the top with a "Just added" highlight.
     allWatchlist = [...allWatchlist, entry];
     justAddedKey = `${entry.title}|${entry.year}`;
-    document.getElementById("watch-search").value = "";
     await applyFilter();
 
     const newCard = document.getElementById("watch-just-added-card");
@@ -297,20 +295,16 @@ if (!publishWorkerConfigured()) {
 let allWatchlist = [];
 
 async function applyFilter() {
-  const query = document.getElementById("watch-search").value.trim().toLowerCase();
-  // Newest-added titles land at the end of allWatchlist, so reverse to show
-  // the most recently added movie first instead of buried at the bottom.
-  const filtered = allWatchlist
-    .filter((m) => m.title.toLowerCase().includes(query))
-    .slice()
-    .reverse();
+  // No search box — this is a poster wall to browse, not to look something
+  // specific up. Newest-added titles land at the end of allWatchlist, so
+  // reverse to show the most recently added movie first.
+  const filtered = allWatchlist.slice().reverse();
 
   await renderGrid(filtered);
   updateStats(filtered);
 
   const emptyState = document.getElementById("watch-empty-state");
   emptyState.hidden = filtered.length > 0;
-  document.getElementById("watch-empty-query").textContent = query;
 }
 
 async function renderGrid(movies) {
@@ -335,8 +329,6 @@ async function init() {
     console.error("Could not load watchlist.json", err);
     allWatchlist = [];
   }
-
-  document.getElementById("watch-search").addEventListener("input", applyFilter);
 
   applyFilter();
 }

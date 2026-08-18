@@ -1735,19 +1735,21 @@ a {
 }
 
 /* ============================================================
-   THEME: 1930s Art Deco
-   Black lacquer + brass gold, a sunburst masthead, thin gold
-   corner brackets on every card. One accent color, used the way
-   deco signage used it: sparingly, on black.
+   THEME: 1930s
+   Studio-mountain night sky — a snow-dusted volcanic cone, its
+   caldera glowing faintly amber, under a deep indigo sky ringed by
+   24 real five-pointed stars, with a majestic script wordmark
+   overlapping the peak, echoing the classic pre-war studio ident
+   this theme is modeled on.
    ============================================================ */
 
 [data-theme="artdeco"] {
-  --paper: #141412;
-  --paper-shadow: #34301f;
-  --maroon: #c9a227;
-  --maroon-dark: #0a0a09;
-  --ink: #e8d9a0;
-  --ink-dim: #9c8a54;
+  --paper: #10142c;
+  --paper-shadow: #262c5c;
+  --maroon: #cfd3ef;
+  --maroon-dark: #05060f;
+  --ink: #e9ebfa;
+  --ink-dim: #8e93c4;
 }
 
 [data-theme="artdeco"] body {
@@ -1772,49 +1774,92 @@ a {
 [data-theme="artdeco"] .form-row textarea,
 [data-theme="artdeco"] .form-row select,
 [data-theme="artdeco"] .lookup-result {
-  background: #0a0a09;
+  background: #05060f;
   color: var(--ink);
   border-color: var(--paper-shadow);
 }
 
 [data-theme="artdeco"] .lookup-result:hover,
 [data-theme="artdeco"] .lookup-result:focus-visible {
-  background: #201d13;
+  background: #171b3d;
   border-color: var(--maroon);
 }
 
 [data-theme="artdeco"] .masthead {
   position: relative;
   overflow: hidden;
-  background: #0a0a09;
-  border-top: 4px double var(--maroon);
-  border-bottom: 4px double var(--maroon);
+  background:
+    radial-gradient(ellipse at 28% 15%, rgba(255, 255, 255, 0.09), transparent 45%),
+    radial-gradient(ellipse at 78% 12%, rgba(255, 255, 255, 0.06), transparent 40%),
+    linear-gradient(180deg, #05060f 0%, #171b3d 55%, #262c5c 100%);
+  background-size: 220% 220%, 220% 220%, 100% 100%;
+  background-position: 20% 30%, 80% 10%, 0 0;
+  border-top: 1px solid var(--paper-shadow);
+  border-bottom: 1px solid var(--paper-shadow);
+  animation: artdeco-clouds-drift 50s linear infinite;
 }
 
-/* Slow sunburst rotation — the gold radiating fan behind the title turns
-   continuously and gradually, like a searchlight beam sweeping a gala
-   movie-palace premiere. Deliberately slow (40s/rotation) so it reads as
-   stately motion, not a spinning gimmick. */
-[data-theme="artdeco"] .masthead::before {
+/* Hand-painted clouds sliding behind the mountain — a slow drift of
+   the two soft cloud-haze layers only; the base night-sky gradient
+   (third layer) stays put, since its position is unchanged between
+   keyframe steps. */
+@keyframes artdeco-clouds-drift {
+  0% { background-position: 20% 30%, 80% 10%, 0 0; }
+  50% { background-position: 55% 25%, 40% 15%, 0 0; }
+  100% { background-position: 20% 30%, 80% 10%, 0 0; }
+}
+
+/* Ring of 24 actual five-pointed stars encircling the peak — drawn
+   as real star polygons in an inline SVG (not an abstracted dash
+   pattern), one star per 15deg slice of the circle (360/15 = 24),
+   matching the real logo's one-star-per-contracted-star count.
+   Rotates almost imperceptibly slowly and twinkles, two animations
+   on two different properties so they never collide. */
+[data-theme="artdeco"] .masthead::after {
   content: "";
   position: absolute;
   left: 50%;
-  top: -30%;
-  width: 900px;
-  height: 900px;
-  background-image: repeating-conic-gradient(
-    from 0deg,
-    rgba(201, 162, 39, 0.14) 0deg 3deg,
-    transparent 3deg 9deg
-  );
-  border-radius: 50%;
+  top: 74%;
+  width: 260px;
+  height: 260px;
+  transform: translate(-50%, -50%);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 320 320'%3E%3Cg fill='%23cfd3ef'%3E%3Cpolygon points='160.0,34.0 161.88,39.41 167.61,39.53 163.04,42.99 164.7,48.47 160.0,45.2 155.3,48.47 156.96,42.99 152.39,39.53 158.12,39.41'/%3E%3Cpolygon points='190.54,38.02 192.42,43.43 198.15,43.55 193.58,47.01 195.24,52.49 190.54,49.22 185.84,52.49 187.5,47.01 182.93,43.55 188.66,43.43'/%3E%3Cpolygon points='219.0,49.81 220.88,55.22 226.61,55.34 222.04,58.8 223.7,64.28 219.0,61.01 214.3,64.28 215.96,58.8 211.39,55.34 217.12,55.22'/%3E%3Cpolygon points='243.44,68.56 245.32,73.97 251.05,74.09 246.48,77.55 248.14,83.03 243.44,79.76 238.74,83.03 240.4,77.55 235.83,74.09 241.56,73.97'/%3E%3Cpolygon points='262.19,93.0 264.07,98.41 269.8,98.53 265.23,101.99 266.89,107.47 262.19,104.2 257.49,107.47 259.15,101.99 254.58,98.53 260.31,98.41'/%3E%3Cpolygon points='273.98,121.46 275.86,126.87 281.59,126.99 277.02,130.45 278.68,135.93 273.98,132.66 269.28,135.93 270.94,130.45 266.37,126.99 272.1,126.87'/%3E%3Cpolygon points='278.0,152.0 279.88,157.41 285.61,157.53 281.04,160.99 282.7,166.47 278.0,163.2 273.3,166.47 274.96,160.99 270.39,157.53 276.12,157.41'/%3E%3Cpolygon points='273.98,182.54 275.86,187.95 281.59,188.07 277.02,191.53 278.68,197.01 273.98,193.74 269.28,197.01 270.94,191.53 266.37,188.07 272.1,187.95'/%3E%3Cpolygon points='262.19,211.0 264.07,216.41 269.8,216.53 265.23,219.99 266.89,225.47 262.19,222.2 257.49,225.47 259.15,219.99 254.58,216.53 260.31,216.41'/%3E%3Cpolygon points='243.44,235.44 245.32,240.85 251.05,240.97 246.48,244.43 248.14,249.91 243.44,246.64 238.74,249.91 240.4,244.43 235.83,240.97 241.56,240.85'/%3E%3Cpolygon points='219.0,254.19 220.88,259.6 226.61,259.72 222.04,263.18 223.7,268.66 219.0,265.39 214.3,268.66 215.96,263.18 211.39,259.72 217.12,259.6'/%3E%3Cpolygon points='190.54,265.98 192.42,271.39 198.15,271.51 193.58,274.97 195.24,280.45 190.54,277.18 185.84,280.45 187.5,274.97 182.93,271.51 188.66,271.39'/%3E%3Cpolygon points='160.0,270.0 161.88,275.41 167.61,275.53 163.04,278.99 164.7,284.47 160.0,281.2 155.3,284.47 156.96,278.99 152.39,275.53 158.12,275.41'/%3E%3Cpolygon points='129.46,265.98 131.34,271.39 137.07,271.51 132.5,274.97 134.16,280.45 129.46,277.18 124.76,280.45 126.42,274.97 121.85,271.51 127.58,271.39'/%3E%3Cpolygon points='101.0,254.19 102.88,259.6 108.61,259.72 104.04,263.18 105.7,268.66 101.0,265.39 96.3,268.66 97.96,263.18 93.39,259.72 99.12,259.6'/%3E%3Cpolygon points='76.56,235.44 78.44,240.85 84.17,240.97 79.6,244.43 81.26,249.91 76.56,246.64 71.86,249.91 73.52,244.43 68.95,240.97 74.68,240.85'/%3E%3Cpolygon points='57.81,211.0 59.69,216.41 65.42,216.53 60.85,219.99 62.51,225.47 57.81,222.2 53.11,225.47 54.77,219.99 50.2,216.53 55.93,216.41'/%3E%3Cpolygon points='46.02,182.54 47.9,187.95 53.63,188.07 49.06,191.53 50.72,197.01 46.02,193.74 41.32,197.01 42.98,191.53 38.41,188.07 44.14,187.95'/%3E%3Cpolygon points='42.0,152.0 43.88,157.41 49.61,157.53 45.04,160.99 46.7,166.47 42.0,163.2 37.3,166.47 38.96,160.99 34.39,157.53 40.12,157.41'/%3E%3Cpolygon points='46.02,121.46 47.9,126.87 53.63,126.99 49.06,130.45 50.72,135.93 46.02,132.66 41.32,135.93 42.98,130.45 38.41,126.99 44.14,126.87'/%3E%3Cpolygon points='57.81,93.0 59.69,98.41 65.42,98.53 60.85,101.99 62.51,107.47 57.81,104.2 53.11,107.47 54.77,101.99 50.2,98.53 55.93,98.41'/%3E%3Cpolygon points='76.56,68.56 78.44,73.97 84.17,74.09 79.6,77.55 81.26,83.03 76.56,79.76 71.86,83.03 73.52,77.55 68.95,74.09 74.68,73.97'/%3E%3Cpolygon points='101.0,49.81 102.88,55.22 108.61,55.34 104.04,58.8 105.7,64.28 101.0,61.01 96.3,64.28 97.96,58.8 93.39,55.34 99.12,55.22'/%3E%3Cpolygon points='129.46,38.02 131.34,43.43 137.07,43.55 132.5,47.01 134.16,52.49 129.46,49.22 124.76,52.49 126.42,47.01 121.85,43.55 127.58,43.43'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
   z-index: 0;
-  animation: artdeco-sunburst-rotate 40s linear infinite;
+  animation: artdeco-star-ring-rotate 120s linear infinite, artdeco-star-twinkle 3.5s ease-in-out infinite;
 }
 
-@keyframes artdeco-sunburst-rotate {
-  from { transform: translateX(-50%) rotate(0deg); }
-  to { transform: translateX(-50%) rotate(360deg); }
+@keyframes artdeco-star-ring-rotate {
+  from { transform: translate(-50%, -50%) rotate(0deg); }
+  to { transform: translate(-50%, -50%) rotate(360deg); }
+}
+
+@keyframes artdeco-star-twinkle {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+
+/* Volcanic cone — a single symmetric peak with a notched caldera at
+   the summit, glowing faintly amber from within like banked embers,
+   snow-pale down its outer slopes fading to the night-sky indigo at
+   the base. Sits in front of the star ring. */
+[data-theme="artdeco"] .masthead::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -2px;
+  height: 46%;
+  background:
+    radial-gradient(circle 34px at 50% 16%, rgba(255, 141, 66, 0.8) 0%, rgba(255, 90, 30, 0.4) 55%, transparent 100%),
+    linear-gradient(180deg, #f4f6ff 0%, #cfd3ef 22%, #6a70a8 55%, #262c5c 100%);
+  clip-path: polygon(
+    0% 100%, 0% 76%, 20% 58%, 38% 24%,
+    46% 10%, 50% 24%, 54% 10%, 62% 24%,
+    80% 58%, 100% 76%, 100% 100%
+  );
+  z-index: 1;
 }
 
 [data-theme="artdeco"] .masthead-inner {
@@ -1830,8 +1875,8 @@ a {
 [data-theme="artdeco"] .price,
 [data-theme="artdeco"] .leaderboard-rank,
 [data-theme="artdeco"] .report-heading {
-  font-family: "Cinzel", "Anton", serif;
-  font-weight: 700;
+  font-family: "Prata", "Cinzel", serif;
+  font-weight: 400;
 }
 
 [data-theme="artdeco"] .eyebrow {
@@ -1840,9 +1885,14 @@ a {
 }
 
 [data-theme="artdeco"] .title {
+  /* Federo — a light, geometric Art Deco display sans with
+     elongated proportions, trading the "majestic script" idea for
+     the era's other signature look: clean, architectural signage
+     lettering. */
+  font-family: "Federo", "Prata", sans-serif;
   color: var(--maroon);
-  text-shadow: none;
-  letter-spacing: 0.06em;
+  text-shadow: 0 2px 10px rgba(5, 6, 15, 0.8);
+  letter-spacing: 0.08em;
 }
 
 [data-theme="artdeco"] .subtitle {
@@ -1857,7 +1907,7 @@ a {
 
 [data-theme="artdeco"] .masthead-nav a:hover {
   background: var(--maroon);
-  color: #0a0a09;
+  color: #05060f;
 }
 
 [data-theme="artdeco"] .ticket,
@@ -1871,13 +1921,16 @@ a {
   border: 1px solid var(--paper-shadow);
 }
 
-/* Lacquer-black paper — multiply would erase the navy stamp, so screen
-   instead, reading like a gold-ish foil press instead of ink-on-paper. */
+/* Midnight-indigo paper — multiply would nearly erase the navy
+   stamp, so screen instead, reading like a silvery foil press. */
 [data-theme="artdeco"] .ticket-stamp {
   mix-blend-mode: screen;
   opacity: 0.15;
 }
 
+/* A single small star in the bottom-right corner of every card —
+   a quiet nod to the 24-star ring above, rather than repeating the
+   full mountain motif on every ticket. */
 [data-theme="artdeco"] .ticket::after,
 [data-theme="artdeco"] .watch-card::after,
 [data-theme="artdeco"] .form-card::after,
@@ -1887,11 +1940,13 @@ a {
 [data-theme="artdeco"] .director-list li::after {
   content: "";
   position: absolute;
-  inset: 6px;
-  border-top: 1px solid rgba(201, 162, 39, 0.55);
-  border-left: 1px solid rgba(201, 162, 39, 0.55);
-  width: 18px;
-  height: 18px;
+  right: 10px;
+  bottom: 10px;
+  width: 12px;
+  height: 12px;
+  background: var(--maroon);
+  opacity: 0.55;
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
   pointer-events: none;
   z-index: 1;
 }
@@ -1904,17 +1959,17 @@ a {
 [data-theme="artdeco"] .ticket-fields,
 [data-theme="artdeco"] .note,
 [data-theme="artdeco"] .rating-value {
-  /* Special Elite reads like a worn 1930s office typewriter — the
-     ribbon-and-ink texture a real Deco-era ticket stub would've been
-     typed on, in place of the shared dot-matrix VT323. */
-  font-family: "Special Elite", "VT323", monospace;
+  /* Cutive Mono — a mechanical-typewriter face, the texture of a
+     numbered box-office stub, in place of the shared dot-matrix
+     VT323. */
+  font-family: "Cutive Mono", "VT323", monospace;
 }
 
 [data-theme="artdeco"] .ticket-plot {
-  /* Crimson Text — an old-style book serif, the kind of body copy a
-     1930s newspaper or magazine review column would have run. */
-  font-family: "Crimson Text", Georgia, serif;
-  font-size: 0.9rem;
+  /* Cormorant — a refined, classical literary serif, the register
+     an old studio pressbook synopsis would have been set in. */
+  font-family: "Cormorant", Georgia, serif;
+  font-size: 0.95rem;
 }
 
 /* ============================================================
@@ -2078,69 +2133,52 @@ a {
 }
 
 /* ============================================================
-   THEME: 1960s Mid-Century Modern
-   Teak brown page, warm parchment cards, mustard/avocado/burnt-
-   orange accents, a Saul-Bass-style concentric-ring masthead.
+   THEME: 1960s — Full Psychedelic
+   A Fillmore Auditorium concert-poster fever dream: hot pink,
+   burnt orange, deep purple, and acid teal bleeding into each
+   other behind melting Wes-Wilson-style lettering, with concentric
+   rings that slowly rotate and cycle hue like a liquid-light show
+   projected behind the band.
    ============================================================ */
 
 [data-theme="midcentury"] {
-  --paper: #f4ead8;
-  --paper-shadow: #d8c9a3;
-  --maroon: #cc6b3c;
-  --maroon-dark: #4e3629;
-  --ink: #3b2a1e;
-  --ink-dim: #8a6a4a;
+  --paper: #f7ead1;
+  --paper-shadow: #e8c9dd;
+  --maroon: #ec1e79;
+  --maroon-dark: #4b1d6e;
+  --ink: #2a0e3d;
+  --ink-dim: #8a5aa8;
+}
+
+[data-theme="midcentury"] .report-heading {
+  color: var(--maroon);
+}
+
+[data-theme="midcentury"] .btn:hover {
+  color: var(--maroon);
 }
 
 [data-theme="midcentury"] .masthead {
   position: relative;
   overflow: hidden;
-  background: var(--maroon-dark);
-}
-
-/* Psychedelic swirl — the concentric rings slowly cycle hue (a
-   Haight-Ashbury concert-poster color-shift) while independently
-   breathing in opacity. Two separate keyframes on two separate
-   properties (filter vs. opacity) so they layer instead of fighting
-   over the same property. */
-[data-theme="midcentury"] .masthead::before {
-  content: "";
-  position: absolute;
-  left: -80px;
-  bottom: -220px;
-  width: 440px;
-  height: 440px;
-  border-radius: 50%;
   background:
-    radial-gradient(circle, transparent 0 120px, #cc6b3c 120px 128px, transparent 128px 160px,
-      #7a8c5a 160px 168px, transparent 168px 200px, #e0a83c 200px 208px, transparent 208px);
-  z-index: 0;
-  animation: midcentury-hue-shift 12s linear infinite, midcentury-ring-pulse 5s ease-in-out infinite;
+    radial-gradient(circle at 15% 20%, rgba(236, 30, 121, 0.55), transparent 40%),
+    radial-gradient(circle at 85% 15%, rgba(255, 122, 26, 0.5), transparent 40%),
+    radial-gradient(circle at 50% 90%, rgba(23, 184, 163, 0.45), transparent 45%),
+    radial-gradient(circle at 78% 70%, rgba(160, 60, 200, 0.5), transparent 40%),
+    linear-gradient(135deg, #2a0e3d 0%, #4b1d6e 55%, #2a0e3d 100%);
+  background-size: 200% 200%, 200% 200%, 200% 200%, 200% 200%, 100% 100%;
+  background-position: 0% 0%, 100% 0%, 50% 100%, 80% 60%, 0 0;
+  animation: midcentury-liquid-drift 22s ease-in-out infinite;
 }
 
-[data-theme="midcentury"] .masthead::after {
-  content: "";
-  position: absolute;
-  right: -100px;
-  top: -160px;
-  width: 320px;
-  height: 320px;
-  border-radius: 50%;
-  background:
-    radial-gradient(circle, transparent 0 90px, #e0a83c 90px 98px, transparent 98px 130px,
-      #cc6b3c 130px 138px, transparent 138px);
-  z-index: 0;
-  animation: midcentury-hue-shift 12s linear infinite reverse, midcentury-ring-pulse 5s ease-in-out infinite 1.5s;
-}
-
-@keyframes midcentury-hue-shift {
-  from { filter: hue-rotate(0deg); }
-  to { filter: hue-rotate(360deg); }
-}
-
-@keyframes midcentury-ring-pulse {
-  0%, 100% { opacity: 0.75; }
-  50% { opacity: 1; }
+/* Liquid-light show — the four color pools slowly ooze around each
+   other, lava-lamp style, while the base backdrop gradient (fifth
+   layer) holds still. */
+@keyframes midcentury-liquid-drift {
+  0%, 100% { background-position: 0% 0%, 100% 0%, 50% 100%, 80% 60%, 0 0; }
+  33% { background-position: 30% 40%, 70% 30%, 30% 70%, 50% 30%, 0 0; }
+  66% { background-position: 10% 60%, 90% 50%, 60% 40%, 20% 80%, 0 0; }
 }
 
 [data-theme="midcentury"] .masthead-inner {
@@ -2156,35 +2194,46 @@ a {
 [data-theme="midcentury"] .price,
 [data-theme="midcentury"] .leaderboard-rank,
 [data-theme="midcentury"] .report-heading {
-  font-family: "Righteous", "Anton", sans-serif;
+  /* Mystery Quest — a funky, curvy "playful 1960s" display face,
+     pushed further into the era than the straighter Bungee. */
+  font-family: "Mystery Quest", "Righteous", "Anton", sans-serif;
 }
 
 [data-theme="midcentury"] .title {
-  color: #f4ead8;
-  text-shadow: none;
+  /* Chicle — a bold, bubbly, rounded display face with real melting
+     weight, standing in for a full Wes-Wilson wordmark. A layered
+     rainbow text-shadow gives it the halo-outline look of a
+     hand-inked concert poster. */
+  font-family: "Chicle", "Mystery Quest", cursive;
+  color: #f7ead1;
+  text-shadow:
+    2px 0 0 #ec1e79,
+    -2px 0 0 #17b8a3,
+    0 2px 0 #ff7a1a,
+    0 -2px 0 #f2c518;
 }
 
 [data-theme="midcentury"] .eyebrow {
-  color: #e0a83c;
+  color: #f2c518;
   letter-spacing: 0.2em;
 }
 
 [data-theme="midcentury"] .subtitle {
-  color: #d8c9a3;
+  color: #f2c8e0;
 }
 
 [data-theme="midcentury"] .masthead-nav a {
-  border-color: #d8c9a3;
-  color: #f4ead8;
+  border-color: #f2c518;
+  color: #f7ead1;
 }
 
 [data-theme="midcentury"] .masthead-nav a:hover {
-  background: #f4ead8;
+  background: #f2c518;
   color: var(--maroon-dark);
 }
 
 [data-theme="midcentury"] .theme-picker {
-  color: #d8c9a3;
+  color: #f2c8e0;
 }
 
 [data-theme="midcentury"] .ticket-header,
@@ -2195,16 +2244,17 @@ a {
 [data-theme="midcentury"] .ticket-fields,
 [data-theme="midcentury"] .note,
 [data-theme="midcentury"] .rating-value {
-  /* Space Mono carries 60s American space-age type design — quirky,
-     geometric monospace that reads as Mod/futurist rather than office
-     typewriter, a nice foil to the swirly psychedelic header. */
-  font-family: "Space Mono", "VT323", monospace;
+  /* Permanent Marker — a loose hand-scrawled marker face, the
+     texture of a ticket someone hand-lettered at a Fillmore box
+     office window, in place of the shared dot-matrix VT323. */
+  font-family: "Permanent Marker", "VT323", monospace;
 }
 
 [data-theme="midcentury"] .ticket-plot {
-  /* Jost — a geometric sans with Bauhaus/modernist roots, the same
-     design lineage that fed 60s Mod and space-age graphics. */
-  font-family: "Jost", "Work Sans", sans-serif;
+  /* Comfortaa — a geometric rounded sans with a spacey, retro-
+     futuristic feel, very 60s/70s-adjacent while staying legible
+     at body-copy size. */
+  font-family: "Comfortaa", "Work Sans", sans-serif;
 }
 
 [data-theme="midcentury"] .ticket,
@@ -2219,6 +2269,10 @@ a {
   overflow: hidden;
 }
 
+/* A small melting rainbow paisley tucked in the top-right corner of
+   every card — a curling paisley tail dripping wax-like blobs off the
+   bulb, echoing the masthead's spiral without competing with the
+   ticket contents. */
 [data-theme="midcentury"] .ticket::after,
 [data-theme="midcentury"] .watch-card::after,
 [data-theme="midcentury"] .form-card::after,
@@ -2228,13 +2282,16 @@ a {
 [data-theme="midcentury"] .director-list li::after {
   content: "";
   position: absolute;
-  top: 0;
-  right: 0;
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 0 26px 26px 0;
-  border-color: transparent #7a8c5a transparent transparent;
+  top: 6px;
+  right: 8px;
+  width: 46px;
+  height: 46px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 140 140'%3E%3Cg%3E%3Cline x1='26' y1='88' x2='27' y2='88' stroke='%23ef4d39' stroke-width='3.4' stroke-linecap='round'/%3E%3Cline x1='27' y1='88' x2='29' y2='87' stroke='%23ef6139' stroke-width='3.7' stroke-linecap='round'/%3E%3Cline x1='29' y1='87' x2='31' y2='87' stroke='%23ef7639' stroke-width='4.1' stroke-linecap='round'/%3E%3Cline x1='31' y1='87' x2='33' y2='87' stroke='%23ef8a39' stroke-width='4.4' stroke-linecap='round'/%3E%3Cline x1='33' y1='87' x2='35' y2='88' stroke='%23ef9e39' stroke-width='4.8' stroke-linecap='round'/%3E%3Cline x1='35' y1='88' x2='36' y2='90' stroke='%23efb239' stroke-width='5.2' stroke-linecap='round'/%3E%3Cline x1='36' y1='90' x2='38' y2='92' stroke='%23efc639' stroke-width='5.5' stroke-linecap='round'/%3E%3Cline x1='38' y1='92' x2='39' y2='95' stroke='%23efdb39' stroke-width='5.9' stroke-linecap='round'/%3E%3Cline x1='39' y1='95' x2='38' y2='98' stroke='%23efef39' stroke-width='6.2' stroke-linecap='round'/%3E%3Cline x1='38' y1='98' x2='38' y2='101' stroke='%23dbef39' stroke-width='6.6' stroke-linecap='round'/%3E%3Cline x1='38' y1='101' x2='36' y2='104' stroke='%23c6ef39' stroke-width='7.0' stroke-linecap='round'/%3E%3Cline x1='36' y1='104' x2='33' y2='106' stroke='%23b2ef39' stroke-width='7.3' stroke-linecap='round'/%3E%3Cline x1='33' y1='106' x2='30' y2='108' stroke='%239eef39' stroke-width='7.7' stroke-linecap='round'/%3E%3Cline x1='30' y1='108' x2='25' y2='110' stroke='%238aef39' stroke-width='8.1' stroke-linecap='round'/%3E%3Cline x1='25' y1='110' x2='21' y2='110' stroke='%2376ef39' stroke-width='8.4' stroke-linecap='round'/%3E%3Cline x1='21' y1='110' x2='16' y2='109' stroke='%2361ef39' stroke-width='8.8' stroke-linecap='round'/%3E%3Cline x1='16' y1='109' x2='11' y2='108' stroke='%234def39' stroke-width='9.1' stroke-linecap='round'/%3E%3Cline x1='11' y1='108' x2='7' y2='105' stroke='%2339ef39' stroke-width='9.5' stroke-linecap='round'/%3E%3Cline x1='7' y1='105' x2='3' y2='101' stroke='%2339ef4d' stroke-width='9.9' stroke-linecap='round'/%3E%3Cline x1='3' y1='101' x2='0' y2='96' stroke='%2339ef61' stroke-width='10.2' stroke-linecap='round'/%3E%3Cline x1='0' y1='96' x2='-1' y2='91' stroke='%2339ef76' stroke-width='10.6' stroke-linecap='round'/%3E%3Cline x1='-1' y1='91' x2='-1' y2='85' stroke='%2339ef8a' stroke-width='10.9' stroke-linecap='round'/%3E%3Cline x1='-1' y1='85' x2='0' y2='79' stroke='%2339ef9e' stroke-width='11.3' stroke-linecap='round'/%3E%3Cline x1='0' y1='79' x2='3' y2='74' stroke='%2339efb2' stroke-width='11.7' stroke-linecap='round'/%3E%3Cline x1='3' y1='74' x2='8' y2='69' stroke='%2339efc6' stroke-width='12.0' stroke-linecap='round'/%3E%3Cline x1='8' y1='69' x2='14' y2='65' stroke='%2339efdb' stroke-width='12.4' stroke-linecap='round'/%3E%3Cline x1='14' y1='65' x2='21' y2='62' stroke='%2339efef' stroke-width='12.8' stroke-linecap='round'/%3E%3Cline x1='21' y1='62' x2='28' y2='60' stroke='%2339dbef' stroke-width='13.1' stroke-linecap='round'/%3E%3Cline x1='28' y1='60' x2='37' y2='61' stroke='%2339c6ef' stroke-width='13.5' stroke-linecap='round'/%3E%3Cline x1='37' y1='61' x2='45' y2='63' stroke='%2339b2ef' stroke-width='13.8' stroke-linecap='round'/%3E%3Cline x1='45' y1='63' x2='52' y2='67' stroke='%23399eef' stroke-width='14.2' stroke-linecap='round'/%3E%3Cline x1='52' y1='67' x2='59' y2='72' stroke='%23398aef' stroke-width='14.6' stroke-linecap='round'/%3E%3Cline x1='59' y1='72' x2='64' y2='79' stroke='%233976ef' stroke-width='14.9' stroke-linecap='round'/%3E%3Cline x1='64' y1='79' x2='67' y2='87' stroke='%233961ef' stroke-width='15.3' stroke-linecap='round'/%3E%3Cline x1='67' y1='87' x2='69' y2='95' stroke='%23394def' stroke-width='15.6' stroke-linecap='round'/%3E%3Cline x1='69' y1='95' x2='68' y2='104' stroke='%233939ef' stroke-width='16.0' stroke-linecap='round'/%3E%3Ccircle cx='68' cy='104' r='14' fill='%23f04242'/%3E%3Cpath d='M74.84100404982668,107.3170196139679 Q72.84100404982668,120.5170196139679 79.34100404982668,124.81701961396789 Q85.84100404982668,120.5170196139679 83.84100404982668,107.3170196139679 Z' fill='%23ef3966'/%3E%3Ccircle cx='79' cy='125' r='4.5' fill='%23ef3966'/%3E%3Cpath d='M69.29648671698676,114.54277528228272 Q67.29648671698676,138.54277528228272 73.79648671698676,150.04277528228272 Q80.29648671698676,138.54277528228272 78.29648671698676,114.54277528228272 Z' fill='%23ef6639'/%3E%3Ccircle cx='74' cy='150' r='4.5' fill='%23ef6639'/%3E%3Cpath d='M60.266540080266765,115.73159031008782 Q58.266540080266765,136.13159031008783 64.76654008026676,145.23159031008782 Q71.26654008026676,136.13159031008783 69.26654008026676,115.73159031008782 Z' fill='%23ef39ef'/%3E%3Ccircle cx='65' cy='145' r='4.5' fill='%23ef39ef'/%3E%3Cpath d='M53.04078441195194,110.18707297724791 Q51.04078441195194,120.9870729772479 57.54078441195194,123.68707297724791 Q64.04078441195193,120.9870729772479 62.04078441195194,110.18707297724791 Z' fill='%23a339ef'/%3E%3Ccircle cx='58' cy='124' r='4.5' fill='%23a339ef'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: contain;
+  background-repeat: no-repeat;
+  opacity: 0.6;
+  pointer-events: none;
+  z-index: 1;
 }
 
 /* ============================================================
@@ -2849,4 +2906,242 @@ a {
      than a straight Garamond, still period-appropriate book copy. */
   font-family: "Vollkorn", "Crimson Text", Georgia, serif;
   font-size: 0.92rem;
+}
+
+/* ============================================================
+   THEME: 1992
+   Sega Genesis / Mega Drive — black console plastic, a red racing
+   stripe accent, and a chrome-blue "shine" sweeping across the
+   masthead the way the real startup logo shimmered through shades
+   of blue. Chunky italic console-logo type, a pixel/bitmap ticket
+   label face, and diagonal speed-stripes standing in for the
+   console's own accent trim.
+   ============================================================ */
+
+[data-theme="sega1992"] {
+  --paper: #0d0d0f;
+  --paper-shadow: #2a2a30;
+  --maroon: #e8231a;
+  --maroon-dark: #0f3f8f;
+  --ink: #e9e9ee;
+  --ink-dim: #8d8d9a;
+}
+
+[data-theme="sega1992"] body {
+  color: var(--ink);
+}
+
+[data-theme="sega1992"] .report-heading {
+  color: var(--maroon);
+}
+
+[data-theme="sega1992"] .chart-value {
+  color: var(--ink);
+}
+
+[data-theme="sega1992"] .btn:hover {
+  color: var(--maroon);
+}
+
+[data-theme="sega1992"] .form-row input[type="text"],
+[data-theme="sega1992"] .form-row input[type="number"],
+[data-theme="sega1992"] .form-row input[type="date"],
+[data-theme="sega1992"] .form-row textarea,
+[data-theme="sega1992"] .form-row select,
+[data-theme="sega1992"] .lookup-result {
+  background: #08080a;
+  color: var(--ink);
+  border-color: var(--paper-shadow);
+}
+
+[data-theme="sega1992"] .lookup-result:hover,
+[data-theme="sega1992"] .lookup-result:focus-visible {
+  background: #17171c;
+  border-color: var(--maroon);
+}
+
+[data-theme="sega1992"] .masthead {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #050506 0%, #0d0d0f 60%, #050506 100%);
+  border-top: 3px solid var(--maroon);
+  border-bottom: 3px solid var(--maroon);
+  /* Power-on flicker — the brief brightness stutter of a CRT
+     warming up to the console's startup screen. */
+  animation: sega1992-power-flicker 6s steps(1) infinite;
+}
+
+@keyframes sega1992-power-flicker {
+  0%, 88%, 100% { filter: brightness(1); }
+  89% { filter: brightness(0.85); }
+  91% { filter: brightness(1.08); }
+  93% { filter: brightness(0.9); }
+  95% { filter: brightness(1); }
+}
+
+/* Diagonal red-and-white racing stripes, bottom-left — the
+   console case's own accent trim, planted in a corner rather than
+   redrawing the whole hardware shell. */
+[data-theme="sega1992"] .masthead::before {
+  content: "";
+  position: absolute;
+  left: -60px;
+  bottom: -60px;
+  width: 260px;
+  height: 140px;
+  background: repeating-linear-gradient(
+    -35deg,
+    var(--maroon) 0 18px,
+    #fff 18px 22px,
+    transparent 22px 40px
+  );
+  opacity: 0.9;
+  z-index: 0;
+  animation: sega1992-stripe-pulse 4s ease-in-out infinite;
+}
+
+@keyframes sega1992-stripe-pulse {
+  0%, 100% { opacity: 0.75; }
+  50% { opacity: 0.95; }
+}
+
+/* Chrome-blue shine — a soft diagonal band of light sweeping across
+   the masthead on a loop, the way the real Sega startup logo shone
+   through shifting shades of blue. */
+[data-theme="sega1992"] .masthead::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -60%;
+  width: 40%;
+  height: 100%;
+  background: linear-gradient(
+    100deg,
+    transparent 0%,
+    rgba(79, 156, 255, 0.35) 45%,
+    rgba(255, 255, 255, 0.5) 50%,
+    rgba(79, 156, 255, 0.35) 55%,
+    transparent 100%
+  );
+  transform: skewX(-20deg);
+  z-index: 0;
+  animation: sega1992-shine-sweep 5s ease-in-out infinite;
+}
+
+@keyframes sega1992-shine-sweep {
+  0%, 20% { left: -60%; }
+  70%, 100% { left: 120%; }
+}
+
+[data-theme="sega1992"] .masthead-inner {
+  position: relative;
+  z-index: 1;
+}
+
+[data-theme="sega1992"] .eyebrow,
+[data-theme="sega1992"] .title,
+[data-theme="sega1992"] .movie-title,
+[data-theme="sega1992"] .watch-title,
+[data-theme="sega1992"] .stat-value,
+[data-theme="sega1992"] .price,
+[data-theme="sega1992"] .leaderboard-rank,
+[data-theme="sega1992"] .report-heading {
+  /* Orbitron — a bold geometric tech display face, the closest
+     Google-Fonts stand-in for a chunky early-90s console-logo
+     typeface. Slanted to fake the italic "speed lean" of a Genesis
+     game logotype. */
+  font-family: "Orbitron", "Audiowide", sans-serif;
+  font-weight: 700;
+  font-style: italic;
+}
+
+[data-theme="sega1992"] .eyebrow {
+  color: var(--ink-dim);
+  letter-spacing: 0.25em;
+  font-style: normal;
+}
+
+[data-theme="sega1992"] .title {
+  color: var(--maroon);
+  text-shadow: 0 0 16px rgba(232, 35, 26, 0.5), 2px 2px 0 var(--maroon-dark);
+}
+
+[data-theme="sega1992"] .subtitle {
+  color: var(--ink-dim);
+}
+
+[data-theme="sega1992"] .masthead-nav a {
+  border-color: var(--maroon);
+  color: var(--ink);
+}
+
+[data-theme="sega1992"] .masthead-nav a:hover {
+  background: var(--maroon);
+  color: #08080a;
+}
+
+[data-theme="sega1992"] .ticket,
+[data-theme="sega1992"] .watch-card,
+[data-theme="sega1992"] .form-card,
+[data-theme="sega1992"] .picker-card,
+[data-theme="sega1992"] .stat-tile,
+[data-theme="sega1992"] .leaderboard-row,
+[data-theme="sega1992"] .director-list li {
+  position: relative;
+  border: 1px solid var(--paper-shadow);
+}
+
+/* Black console-plastic paper — multiply would nearly erase the
+   navy stamp, so screen instead, reading like a foil press. */
+[data-theme="sega1992"] .ticket-stamp {
+  mix-blend-mode: screen;
+  opacity: 0.15;
+}
+
+/* A small diagonal racing-stripe corner mark, echoing the masthead's
+   console-trim stripes on every card. */
+[data-theme="sega1992"] .ticket::after,
+[data-theme="sega1992"] .watch-card::after,
+[data-theme="sega1992"] .form-card::after,
+[data-theme="sega1992"] .picker-card::after,
+[data-theme="sega1992"] .stat-tile::after,
+[data-theme="sega1992"] .leaderboard-row::after,
+[data-theme="sega1992"] .director-list li::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 34px;
+  height: 34px;
+  background: repeating-linear-gradient(
+    -35deg,
+    var(--maroon) 0 6px,
+    #fff 6px 8px,
+    transparent 8px 14px
+  );
+  -webkit-mask: linear-gradient(-45deg, transparent 50%, #000 50%);
+  mask: linear-gradient(-45deg, transparent 50%, #000 50%);
+  opacity: 0.85;
+  pointer-events: none;
+  z-index: 1;
+}
+
+[data-theme="sega1992"] .ticket-header,
+[data-theme="sega1992"] .stub-serial,
+[data-theme="sega1992"] .stub-admit,
+[data-theme="sega1992"] .stub-avg,
+[data-theme="sega1992"] .ticket-credits,
+[data-theme="sega1992"] .ticket-fields,
+[data-theme="sega1992"] .note,
+[data-theme="sega1992"] .rating-value {
+  /* Silkscreen — a tiny bitmap/pixel face, the literal texture of a
+     16-bit console's on-screen text, in place of the shared
+     dot-matrix VT323. */
+  font-family: "Silkscreen", "VT323", monospace;
+}
+
+[data-theme="sega1992"] .ticket-plot {
+  /* Rajdhani — a condensed technical sans with a console-manual
+     feel, keeping the synopsis legible without going soft. */
+  font-family: "Rajdhani", "Work Sans", sans-serif;
 }

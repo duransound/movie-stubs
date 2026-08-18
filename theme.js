@@ -6,6 +6,7 @@
 
 const THEMES = [
   { value: "classic", label: "1990s" },
+  { value: "sega1992", label: "1992" },
   { value: "socal", label: "1980s" },
   { value: "cinematic70s", label: "1970s" },
   { value: "midcentury", label: "1960s" },

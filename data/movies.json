@@ -170,7 +170,7 @@
     },
     "venue": "Cinemark Daly City",
     "note": "Shaking seats!",
-    "posterUrl": "https://m.media-amazon.com/images/M/MV5BZmVjNzQ3MjYtYTZiNC00Y2YzLWExZTEtMTM2ZDllNDI0MzgyXkEyXkFqcGc@._V1_QL75_UX380_CR0,12,380,562_.jpg",
+    "posterUrl": "https://m.media-amazon.com/images/M/MV5BZmVjNzQ3MjYtYTZiNC00Y2YzLWExZTEtTTM2ZDllNDI0MzgyXkEyXkFqcGc@._V1_QL75_UX380_CR0,12,380,562_.jpg",
     "releaseDate": "1986-05-16"
   },
   {
@@ -193,6 +193,11 @@
     "ratings": {
       "mollie": 4.5,
       "ian": 4
+<<<<<<< Updated upstream
     }
+=======
+    },
+    "venue": "Kabuki"
+>>>>>>> Stashed changes
   }
 ]

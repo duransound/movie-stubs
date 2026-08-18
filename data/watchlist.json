@@ -237,5 +237,11 @@
     "year": 2025,
     "genre": "Action",
     "director": "Ryan Coogler"
+  },
+  {
+    "title": "Oppenheimer",
+    "year": 2023,
+    "genre": "Biography",
+    "director": "Christopher Nolan"
   }
 ]

@@ -11,6 +11,7 @@ const THEMES = [
   { value: "midcentury", label: "1960s" },
   { value: "vintage50s", label: "1950s" },
   { value: "artdeco", label: "1930s" },
+  { value: "unitedartists", label: "United Artists Theatres" },
 ];
 
 const THEME_KEY = "movieStubTheme";

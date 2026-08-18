@@ -2439,3 +2439,212 @@ a {
   z-index: 1;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
+
+/* ============================================================
+   THEME: United Artists Theatres (1989-97)
+   Glossy navy & gold star era — "Experience the Magic." Crisp
+   thermal-printed ticket stock (not aged like the vintage themes),
+   a five-pointed gold star standing in for the brand's stylized
+   logo mark, and a mirrored/rearranged ticket layout: the tear-off
+   stub moves to the right edge and the price becomes a gold badge
+   pinned above the details, letting the barcode run the full
+   width of the footer — a genuine multiplex-box-office ticket
+   silhouette rather than just a recolor of the base layout.
+   ============================================================ */
+
+[data-theme="unitedartists"] {
+  --paper: #f4f6fb;
+  --paper-shadow: #c7d2ea;
+  --maroon: #f2b705;
+  --maroon-dark: #0b1638;
+  --ink: #10173a;
+  --ink-dim: #5b6690;
+}
+
+[data-theme="unitedartists"] .report-heading {
+  color: var(--maroon-dark);
+}
+
+[data-theme="unitedartists"] .chart-value {
+  color: var(--ink);
+}
+
+[data-theme="unitedartists"] .btn:hover {
+  color: var(--maroon-dark);
+}
+
+[data-theme="unitedartists"] .masthead {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #0b1638 0%, #131f4a 60%, #0b1638 100%);
+}
+
+/* "Experience the Magic" glow — a soft gold radial haze breathing
+   behind the star, evoking the tagline's marquee-lit warmth. */
+[data-theme="unitedartists"] .masthead::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 640px;
+  height: 640px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(circle, rgba(242, 183, 5, 0.35) 0%, rgba(242, 183, 5, 0.12) 40%, transparent 70%);
+  z-index: 0;
+  animation: unitedartists-glow-pulse 6s ease-in-out infinite;
+}
+
+@keyframes unitedartists-glow-pulse {
+  0%, 100% { opacity: 0.7; transform: translate(-50%, -50%) scale(0.92); }
+  50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+}
+
+/* The stylized star (standing in for the brand's star-from-the-S
+   mark), rotating slowly and twinkling — two independent animations
+   on separate properties so they never fight each other. */
+[data-theme="unitedartists"] .masthead::after {
+  content: "";
+  position: absolute;
+  right: 6%;
+  top: 50%;
+  width: 120px;
+  height: 120px;
+  transform: translateY(-50%);
+  background: var(--maroon);
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+  z-index: 0;
+  animation: unitedartists-star-rotate 24s linear infinite, unitedartists-star-twinkle 3.2s ease-in-out infinite;
+}
+
+@keyframes unitedartists-star-rotate {
+  from { transform: translateY(-50%) rotate(0deg); }
+  to { transform: translateY(-50%) rotate(360deg); }
+}
+
+@keyframes unitedartists-star-twinkle {
+  0%, 100% { opacity: 0.55; }
+  50% { opacity: 1; }
+}
+
+[data-theme="unitedartists"] .masthead-inner {
+  position: relative;
+  z-index: 1;
+}
+
+[data-theme="unitedartists"] .eyebrow,
+[data-theme="unitedartists"] .title,
+[data-theme="unitedartists"] .movie-title,
+[data-theme="unitedartists"] .watch-title,
+[data-theme="unitedartists"] .stat-value,
+[data-theme="unitedartists"] .price,
+[data-theme="unitedartists"] .leaderboard-rank,
+[data-theme="unitedartists"] .report-heading {
+  /* Audiowide — a bold, rounded, futuristic display face, reading
+     like glossy multiplex marquee signage. */
+  font-family: "Audiowide", "Anton", sans-serif;
+  font-weight: 400;
+}
+
+[data-theme="unitedartists"] .eyebrow {
+  color: #a9b6de;
+  letter-spacing: 0.24em;
+}
+
+[data-theme="unitedartists"] .title {
+  color: var(--maroon);
+  text-shadow: 0 0 18px rgba(242, 183, 5, 0.4);
+}
+
+[data-theme="unitedartists"] .subtitle {
+  color: #c7d2ea;
+}
+
+[data-theme="unitedartists"] .masthead-nav a {
+  border-color: var(--maroon);
+  color: #e7ecfb;
+}
+
+[data-theme="unitedartists"] .masthead-nav a:hover {
+  background: var(--maroon);
+  color: var(--maroon-dark);
+}
+
+[data-theme="unitedartists"] .ticket,
+[data-theme="unitedartists"] .watch-card,
+[data-theme="unitedartists"] .form-card,
+[data-theme="unitedartists"] .picker-card,
+[data-theme="unitedartists"] .stat-tile,
+[data-theme="unitedartists"] .leaderboard-row,
+[data-theme="unitedartists"] .director-list li {
+  position: relative;
+  border: 1px solid var(--paper-shadow);
+  box-shadow: inset 0 0 0 3px rgba(242, 183, 5, 0.5), 0 10px 20px rgba(11, 22, 56, 0.25), 0 2px 0 rgba(11, 22, 56, 0.12);
+}
+
+/* Glossy ice-white paper — multiply reads correctly here (same as
+   the base classic theme), so no override needed. */
+
+/* Mirror the stub to the right edge via `order`, rather than
+   row-reverse, so .perforation's absolutely-positioned dot circles
+   (anchored to its own left border) stay correct regardless of
+   which side they land on. */
+[data-theme="unitedartists"] .stub {
+  order: 3;
+}
+
+[data-theme="unitedartists"] .perforation {
+  order: 2;
+}
+
+[data-theme="unitedartists"] .ticket-body {
+  order: 1;
+}
+
+/* Price becomes a gold badge pinned above the details, out of
+   normal flow — the barcode's existing `flex: 1` then expands to
+   fill the whole footer width automatically. */
+[data-theme="unitedartists"] .ticket-details {
+  position: relative;
+}
+
+/* Reserve blank space on the right of the header row so the gold
+   price badge (pinned above .ticket-details) has clear room and
+   never overlaps the serial number text. */
+[data-theme="unitedartists"] .ticket-header {
+  padding-right: 4.4rem;
+}
+
+[data-theme="unitedartists"] .price {
+  position: absolute;
+  top: -0.35rem;
+  right: -0.1rem;
+  background: var(--maroon);
+  color: var(--maroon-dark);
+  font-family: "Audiowide", "Anton", sans-serif;
+  font-size: 0.85rem;
+  padding: 0.2rem 0.55rem;
+  border-radius: 3px;
+  box-shadow: 0 2px 6px rgba(11, 22, 56, 0.3);
+  white-space: nowrap;
+  z-index: 1;
+}
+
+[data-theme="unitedartists"] .ticket-header,
+[data-theme="unitedartists"] .stub-serial,
+[data-theme="unitedartists"] .stub-admit,
+[data-theme="unitedartists"] .stub-avg,
+[data-theme="unitedartists"] .ticket-credits,
+[data-theme="unitedartists"] .ticket-fields,
+[data-theme="unitedartists"] .note,
+[data-theme="unitedartists"] .rating-value {
+  /* Chakra Petch — a techy, geometric monospace-adjacent face, in
+     place of the shared dot-matrix VT323, for a crisp thermal-print
+     box-office feel distinct from every other theme's label font. */
+  font-family: "Chakra Petch", "VT323", monospace;
+}
+
+[data-theme="unitedartists"] .ticket-plot {
+  /* Barlow Condensed — a clean, modern condensed sans, reading like
+     late-80s/90s multiplex signage copy rather than a period serif. */
+  font-family: "Barlow Condensed", "Work Sans", sans-serif;
+}

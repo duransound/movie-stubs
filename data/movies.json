@@ -27,7 +27,8 @@
     "ratings": {
       "mollie": 4.5,
       "ian": 4.5
-    }
+    },
+    "venue": "Kabuki"
   },
   {
     "title": "The Boy, The Mole, The Fox and The Horse",
@@ -36,7 +37,8 @@
     "ratings": {
       "mollie": 4.5,
       "ian": 4.5
-    }
+    },
+    "venue": "At Home <3"
   },
   {
     "title": "Tammy and the T-Rex",
@@ -45,7 +47,8 @@
     "ratings": {
       "mollie": 2,
       "ian": 3
-    }
+    },
+    "venue": "Begrudgingly: At home"
   },
   {
     "title": "Chopper Chicks in Zombietown",
@@ -54,7 +57,8 @@
     "ratings": {
       "mollie": 3,
       "ian": 3.5
-    }
+    },
+    "venue": "Begrudgingly: At home"
   },
   {
     "title": "A Day",
@@ -63,7 +67,8 @@
     "ratings": {
       "mollie": 4.5,
       "ian": 4.5
-    }
+    },
+    "venue": "The Couch"
   },
   {
     "title": "Banshees of Inisherin",
@@ -72,7 +77,8 @@
     "ratings": {
       "mollie": 4.5,
       "ian": 4.5
-    }
+    },
+    "venue": "Cinemark Daly City"
   },
   {
     "title": "Pin Cushion",
@@ -81,7 +87,8 @@
     "ratings": {
       "mollie": 4,
       "ian": 4
-    }
+    },
+    "venue": "At Home"
   },
   {
     "title": "Role Models",
@@ -90,7 +97,8 @@
     "ratings": {
       "mollie": 3.5,
       "ian": 4
-    }
+    },
+    "venue": "On the couch"
   },
   {
     "title": "Top Gun: Maverick",
@@ -100,7 +108,8 @@
       "mollie": 5,
       "ian": 4.5
     },
-    "note": "SHOULD HAVE WON EVERYTHING"
+    "note": "SHOULD HAVE WON EVERYTHING",
+    "venue": "Cinemark Daly City"
   },
   {
     "title": "This Is Where I Leave You",
@@ -109,7 +118,8 @@
     "ratings": {
       "mollie": 4,
       "ian": 4
-    }
+    },
+    "venue": "On the couch"
   },
   {
     "title": "Say Hey, Willie Mays!",
@@ -118,7 +128,8 @@
     "ratings": {
       "mollie": 4.5,
       "ian": 4
-    }
+    },
+    "venue": "On the couch"
   },
   {
     "title": "Diego Maradona",
@@ -127,7 +138,8 @@
     "ratings": {
       "mollie": 4,
       "ian": 4
-    }
+    },
+    "venue": "On the couch"
   },
   {
     "title": "Inside",
@@ -145,7 +157,8 @@
     "ratings": {
       "mollie": 4,
       "ian": 4
-    }
+    },
+    "venue": "UC Berkeley BAMPFA"
   },
   {
     "title": "Top Gun",

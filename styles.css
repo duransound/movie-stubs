@@ -2648,3 +2648,205 @@ a {
      late-80s/90s multiplex signage copy rather than a period serif. */
   font-family: "Barlow Condensed", "Work Sans", sans-serif;
 }
+
+/* ============================================================
+   THEME: MGM (1924-1920s)
+   Founding-era Metro-Goldwyn-Mayer — sepia parchment ticket stock
+   (this was the silent, black-and-white-film era, so the palette
+   leans warm sepia/bronze rather than any studio "brand color"),
+   a dark espresso-and-brass masthead framed like an engraved
+   theatrical program, a laurel-wreath medallion standing in for
+   the Leo the Lion roundel, and a scrolling sprocket-hole strip
+   evoking a nitrate newsreel. Ars Gratia Artis.
+   ============================================================ */
+
+[data-theme="mgm1920s"] {
+  --paper: #f3e6c8;
+  --paper-shadow: #d9c48f;
+  --maroon: #b6892f;
+  --maroon-dark: #241a0c;
+  --ink: #2a1d0c;
+  --ink-dim: #7a6142;
+}
+
+[data-theme="mgm1920s"] .report-heading {
+  color: var(--maroon);
+}
+
+[data-theme="mgm1920s"] .chart-value {
+  color: var(--ink);
+}
+
+[data-theme="mgm1920s"] .btn:hover {
+  color: var(--maroon);
+}
+
+[data-theme="mgm1920s"] .masthead {
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #1c130a 0%, #2c1f10 55%, #1c130a 100%);
+  border-top: 3px double var(--maroon);
+  border-bottom: 3px double var(--maroon);
+}
+
+/* Laurel-wreath medallion glow — a soft brass spotlight breathing
+   behind the emblem, like a torch-lit theatrical program cover. */
+[data-theme="mgm1920s"] .masthead::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -10%;
+  width: 460px;
+  height: 460px;
+  transform: translateX(-50%);
+  background:
+    radial-gradient(circle, transparent 54%, rgba(182, 137, 47, 0.5) 55%, rgba(182, 137, 47, 0.5) 57%, transparent 58%),
+    radial-gradient(circle, transparent 62%, rgba(182, 137, 47, 0.3) 63%, rgba(182, 137, 47, 0.3) 64%, transparent 65%),
+    radial-gradient(circle, rgba(182, 137, 47, 0.22) 0%, transparent 60%);
+  border-radius: 50%;
+  z-index: 0;
+  animation: mgm1920s-medallion-glow 5s ease-in-out infinite;
+}
+
+@keyframes mgm1920s-medallion-glow {
+  0%, 100% { opacity: 0.6; transform: translateX(-50%) scale(0.96); }
+  50% { opacity: 1; transform: translateX(-50%) scale(1.04); }
+}
+
+/* Sprocket-hole strip along the bottom edge, ticking through like
+   film pulled past a projector gate — a discrete stepped scroll,
+   not a smooth glide. */
+[data-theme="mgm1920s"] .masthead::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 14px;
+  background-image: radial-gradient(circle, var(--maroon) 3.5px, transparent 4px);
+  background-size: 28px 14px;
+  background-position: 0 50%;
+  opacity: 0.7;
+  z-index: 0;
+  animation: mgm1920s-sprocket-scroll 1.6s steps(6) infinite;
+}
+
+@keyframes mgm1920s-sprocket-scroll {
+  from { background-position: 0 50%; }
+  to { background-position: -28px 50%; }
+}
+
+/* Nitrate flicker — old silent-film prints jitter in brightness as
+   they run; irregular timing reads as a real projector, not a
+   metronome. Lives on .masthead itself so it doesn't collide with
+   the glow (::before opacity/scale) or the sprocket scroll (::after
+   background-position). */
+[data-theme="mgm1920s"] .masthead {
+  animation: mgm1920s-film-flicker 5s steps(1) infinite;
+}
+
+@keyframes mgm1920s-film-flicker {
+  0%, 84%, 100% { filter: brightness(1); }
+  85% { filter: brightness(0.88); }
+  87% { filter: brightness(1.05); }
+  89% { filter: brightness(0.92); }
+  91% { filter: brightness(1); }
+}
+
+[data-theme="mgm1920s"] .masthead-inner {
+  position: relative;
+  z-index: 1;
+}
+
+[data-theme="mgm1920s"] .eyebrow,
+[data-theme="mgm1920s"] .title,
+[data-theme="mgm1920s"] .movie-title,
+[data-theme="mgm1920s"] .watch-title,
+[data-theme="mgm1920s"] .stat-value,
+[data-theme="mgm1920s"] .price,
+[data-theme="mgm1920s"] .leaderboard-rank,
+[data-theme="mgm1920s"] .report-heading {
+  /* Marcellus — a clean, elegant Roman-inspired serif, reading like
+     an engraved brass plaque rather than Cinzel Decorative's heavier
+     medallion lettering. */
+  font-family: "Marcellus", "Cinzel", serif;
+  font-weight: 400;
+}
+
+[data-theme="mgm1920s"] .eyebrow {
+  color: var(--maroon);
+  letter-spacing: 0.3em;
+}
+
+[data-theme="mgm1920s"] .title {
+  color: #f3e6c8;
+  text-shadow: 0 0 14px rgba(182, 137, 47, 0.45);
+}
+
+[data-theme="mgm1920s"] .subtitle {
+  color: #c9b384;
+}
+
+[data-theme="mgm1920s"] .masthead-nav a {
+  border-color: var(--maroon);
+  color: #f3e6c8;
+}
+
+[data-theme="mgm1920s"] .masthead-nav a:hover {
+  background: var(--maroon);
+  color: #1c130a;
+}
+
+[data-theme="mgm1920s"] .ticket,
+[data-theme="mgm1920s"] .watch-card,
+[data-theme="mgm1920s"] .form-card,
+[data-theme="mgm1920s"] .picker-card,
+[data-theme="mgm1920s"] .stat-tile,
+[data-theme="mgm1920s"] .leaderboard-row,
+[data-theme="mgm1920s"] .director-list li {
+  position: relative;
+  border: 1px solid var(--paper-shadow);
+}
+
+/* Engraved bottom-right corner bracket — a program-cover framing
+   flourish, deliberately opposite the 1930s theme's top-left one
+   so the two gold-accented themes read distinctly at a glance. */
+[data-theme="mgm1920s"] .ticket::after,
+[data-theme="mgm1920s"] .watch-card::after,
+[data-theme="mgm1920s"] .form-card::after,
+[data-theme="mgm1920s"] .picker-card::after,
+[data-theme="mgm1920s"] .stat-tile::after,
+[data-theme="mgm1920s"] .leaderboard-row::after,
+[data-theme="mgm1920s"] .director-list li::after {
+  content: "";
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  border-bottom: 1px solid rgba(182, 137, 47, 0.6);
+  border-right: 1px solid rgba(182, 137, 47, 0.6);
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+[data-theme="mgm1920s"] .ticket-header,
+[data-theme="mgm1920s"] .stub-serial,
+[data-theme="mgm1920s"] .stub-admit,
+[data-theme="mgm1920s"] .stub-avg,
+[data-theme="mgm1920s"] .ticket-credits,
+[data-theme="mgm1920s"] .ticket-fields,
+[data-theme="mgm1920s"] .note,
+[data-theme="mgm1920s"] .rating-value {
+  /* IM Fell French Canon — a worn movable-type book face, the
+     texture of a 1920s theatrical program's fine print, in place
+     of VT323. */
+  font-family: "IM Fell French Canon", "Special Elite", serif;
+}
+
+[data-theme="mgm1920s"] .ticket-plot {
+  /* Vollkorn — a warm, sturdy serif with more weight and character
+     than a straight Garamond, still period-appropriate book copy. */
+  font-family: "Vollkorn", "Crimson Text", Georgia, serif;
+  font-size: 0.92rem;
+}

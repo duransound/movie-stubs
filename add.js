@@ -229,6 +229,40 @@ function setPublishStatus(message, isError = false, isSuccess = false) {
   el.classList.toggle("success", isSuccess);
 }
 
+// If this page was opened via a watchlist "Log this" link, holds the
+// {title, year} to clear off the watchlist once the ticket is logged.
+let watchlistMatch = null;
+
+// Best-effort — a failure here shouldn't block the ticket itself from
+// having been added, so it's caught and just noted in the status line
+// rather than thrown.
+async function removeFromWatchlist(match) {
+  try {
+    const res = await fetch(PUBLISH_WORKER_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(typeof PUBLISH_SITE_KEY !== "undefined" && PUBLISH_SITE_KEY ? { "X-Site-Key": PUBLISH_SITE_KEY } : {}),
+      },
+      body: JSON.stringify({
+        path: "data/watchlist.json",
+        action: "remove",
+        match,
+        message: `Remove "${match.title}" from watchlist (logged via add.html)`,
+      }),
+    });
+
+    const result = await res.json().catch(() => ({}));
+    if (!res.ok || !result.ok) {
+      throw new Error(result.error || `Watchlist removal failed (${res.status}).`);
+    }
+    return true;
+  } catch (err) {
+    console.warn("Could not remove watchlist entry for", match.title, err);
+    return false;
+  }
+}
+
 async function publishEntryToGithub(entry) {
   const addBtn = document.getElementById("add-btn");
   addBtn.disabled = true;
@@ -254,11 +288,17 @@ async function publishEntryToGithub(entry) {
       throw new Error(result.error || `Publish failed (${res.status}).`);
     }
 
-    setPublishStatus(
-      `✓ Added "${entry.title}"! GitHub Pages will update in a minute or two.`,
-      false,
-      true
-    );
+    let statusMessage = `✓ Added "${entry.title}"! GitHub Pages will update in a minute or two.`;
+
+    if (watchlistMatch) {
+      const removed = await removeFromWatchlist(watchlistMatch);
+      statusMessage += removed
+        ? " Also cleared it off Coming Attractions."
+        : " (Couldn't clear it off Coming Attractions — you may need to remove it there by hand.)";
+      watchlistMatch = null;
+    }
+
+    setPublishStatus(statusMessage, false, true);
 
     document.getElementById("ticket-form").reset();
     resetStars();
@@ -322,6 +362,10 @@ if (!publishWorkerConfigured()) {
 
   document.getElementById("title").value = title;
   if (year) document.getElementById("year").value = parseInt(year, 10) || year;
+
+  // Remembers this came from a watchlist "Log this" link so a successful
+  // submission also clears the matching entry off Coming Attractions.
+  watchlistMatch = { title, year: year || null };
 
   if (getOmdbKey()) {
     document.getElementById("lookup-btn").click();

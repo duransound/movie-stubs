@@ -90,11 +90,67 @@ async function cardElement(movie) {
           ${movie.suggestedBy ? `<span class="watch-suggested-by ${movie.suggestedBy}">${movie.suggestedBy === "mollie" ? "Mollie's pick" : "Ian's pick"}</span>` : ""}
         </div>
       ` : ""}
-      <a class="btn secondary watch-log-btn" href="add.html?title=${encodeURIComponent(movie.title)}&year=${encodeURIComponent(movie.year)}">Log this</a>
+      <div class="watch-actions">
+        <a class="btn secondary watch-log-btn" href="add.html?title=${encodeURIComponent(movie.title)}&year=${encodeURIComponent(movie.year)}">Log this</a>
+        <button type="button" class="watch-mark-btn">Mark watched</button>
+      </div>
     </div>
   `;
 
+  const markBtn = el.querySelector(".watch-mark-btn");
+  if (!publishWorkerConfigured()) {
+    markBtn.disabled = true;
+    markBtn.title = "Set PUBLISH_WORKER_URL in config.public.js to enable this — see README.";
+  } else {
+    markBtn.addEventListener("click", () => markWatched(movie, el, markBtn));
+  }
+
   return el;
+}
+
+// ---------- Mark watched (quick remove, no ticket logged) ----------
+// A faster alternative to "Log this" for when you don't want to fill out
+// the full rating form right now — just clears the entry off Coming
+// Attractions. Unlike "Log this", this does NOT create a ticket in
+// movies.json, so there's no rating/date/note recorded for the watch.
+
+async function markWatched(movie, cardEl, btn) {
+  const confirmed = confirm(`Mark "${movie.title}" as watched and remove it from Coming Attractions?\n\n(This won't log a rated ticket — use "Log this" instead if you want to record ratings for it.)`);
+  if (!confirmed) return;
+
+  btn.disabled = true;
+  btn.textContent = "Removing…";
+
+  try {
+    const res = await fetch(PUBLISH_WORKER_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        ...(typeof PUBLISH_SITE_KEY !== "undefined" && PUBLISH_SITE_KEY ? { "X-Site-Key": PUBLISH_SITE_KEY } : {}),
+      },
+      body: JSON.stringify({
+        path: "data/watchlist.json",
+        action: "remove",
+        match: { title: movie.title, year: movie.year },
+        message: `Remove "${movie.title}" from watchlist (marked watched via watchlist.html)`,
+      }),
+    });
+
+    const result = await res.json().catch(() => ({}));
+    if (!res.ok || !result.ok) {
+      throw new Error(result.error || `Remove failed (${res.status}).`);
+    }
+
+    allWatchlist = allWatchlist.filter((m) => !(m.title === movie.title && String(m.year) === String(movie.year)));
+    cardEl.remove();
+    updateStats(allWatchlist);
+    document.getElementById("watch-empty-state").hidden = allWatchlist.length > 0;
+  } catch (err) {
+    console.error(err);
+    alert(err.message || "Couldn't remove that title. Try again in a moment.");
+    btn.disabled = false;
+    btn.textContent = "Mark watched";
+  }
 }
 
 // ---------- Add a movie ----------

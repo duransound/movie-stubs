@@ -79,12 +79,17 @@ export default {
       return respond(400, { ok: false, error: "Bad request body." });
     }
 
-    const { path, entry, message } = body || {};
+    const { path, entry, match, action, message } = body || {};
+    const isRemove = action === "remove";
 
     if (!ALLOWED_PATHS.includes(path)) {
       return respond(400, { ok: false, error: "Not an allowed file." });
     }
-    if (!entry || typeof entry !== "object") {
+    if (isRemove) {
+      if (!match || typeof match !== "object" || !match.title) {
+        return respond(400, { ok: false, error: "Missing match.title for remove." });
+      }
+    } else if (!entry || typeof entry !== "object") {
       return respond(400, { ok: false, error: "Missing entry." });
     }
 
@@ -127,14 +132,31 @@ export default {
       }
       // 404 means the file doesn't exist yet — start from an empty array.
 
-      const merged = [...existing, entry];
+      let merged;
+      if (isRemove) {
+        // Drops every entry matching title (case-insensitive) and, if a
+        // year was given, that year too — so "Log this"/"Mark watched"
+        // on watchlist.html can clear an entry out once it's been logged
+        // as a real ticket, without needing to know its exact index.
+        merged = existing.filter((item) => {
+          const titleMatches = (item.title || "").trim().toLowerCase() === match.title.trim().toLowerCase();
+          const yearMatches = match.year === undefined || match.year === null || match.year === ""
+            ? true
+            : String(item.year) === String(match.year);
+          return !(titleMatches && yearMatches);
+        });
+      } else {
+        merged = [...existing, entry];
+      }
       const content = utf8ToBase64(`${JSON.stringify(merged, null, 2)}\n`);
 
       const putRes = await fetch(apiBase, {
         method: "PUT",
         headers: { ...headers, "Content-Type": "application/json" },
         body: JSON.stringify({
-          message: message || `Add "${entry.title || "entry"}" via movie-stubs`,
+          message: message || (isRemove
+            ? `Remove "${match.title}" via movie-stubs`
+            : `Add "${entry.title || "entry"}" via movie-stubs`),
           content,
           branch,
           ...(sha ? { sha } : {}),
@@ -142,7 +164,7 @@ export default {
       });
 
       if (putRes.ok) {
-        return respond(200, { ok: true });
+        return respond(200, { ok: true, removed: isRemove ? existing.length - merged.length : undefined });
       }
 
       if (putRes.status === 409 && attempt < 2) {

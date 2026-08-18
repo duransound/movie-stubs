@@ -653,12 +653,43 @@ a {
   /* No line-clamp — the card just grows to fit the whole plot. */
 }
 
-.watch-log-btn {
+.watch-actions {
   margin-top: auto;
-  align-self: flex-start;
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  flex-wrap: wrap;
+}
+
+.watch-log-btn {
   text-decoration: none;
   font-size: 0.95rem;
   padding: 0.35rem 0.8rem;
+}
+
+/* Quick "mark watched" — a plain text-style button, deliberately less
+   prominent than "Log this" since it skips recording any rating. */
+.watch-mark-btn {
+  background: none;
+  border: none;
+  font-family: "VT323", monospace;
+  font-size: 0.95rem;
+  letter-spacing: 0.03em;
+  color: var(--ink-dim);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  cursor: pointer;
+  padding: 0.35rem 0;
+}
+
+.watch-mark-btn:hover {
+  color: var(--ink);
+}
+
+.watch-mark-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+  text-decoration: none;
 }
 
 .watch-tags {

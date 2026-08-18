@@ -185,5 +185,14 @@
     "note": "70mm imax Metreon is the best!",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BN2JkMDc5MGQtZjg3YS00NmFiLWIyZmQtZTJmNTM5MjVmYTQ4XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
     "releaseDate": "2023-07-21"
+  },
+  {
+    "title": "Spider-Man: Brand New Day",
+    "year": 2026,
+    "watchedDate": "2026-08-05",
+    "ratings": {
+      "mollie": 4.5,
+      "ian": 4
+    }
   }
 ]

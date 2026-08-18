@@ -172,5 +172,18 @@
     "note": "Shaking seats!",
     "posterUrl": "https://m.media-amazon.com/images/M/MV5BZmVjNzQ3MjYtYTZiNC00Y2YzLWExZTEtMTM2ZDllNDI0MzgyXkEyXkFqcGc@._V1_QL75_UX380_CR0,12,380,562_.jpg",
     "releaseDate": "1986-05-16"
+  },
+  {
+    "title": "Oppenheimer",
+    "year": 2023,
+    "watchedDate": "2024-09-16",
+    "ratings": {
+      "mollie": 4.5,
+      "ian": 4.5
+    },
+    "venue": "Metreon IMAX 70mm",
+    "note": "70mm imax Metreon is the best!",
+    "posterUrl": "https://m.media-amazon.com/images/M/MV5BN2JkMDc5MGQtZjg3YS00NmFiLWIyZmQtZTJmNTM5MjVmYTQ4XkEyXkFqcGc@._V1_QL75_UX380_CR0,0,380,562_.jpg",
+    "releaseDate": "2023-07-21"
   }
 ]

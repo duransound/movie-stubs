@@ -249,5 +249,11 @@
     "year": 2025,
     "genre": "Drama",
     "director": "Kaouther Ben Hania"
+  },
+  {
+    "title": "The Fast and the Furious",
+    "year": 2001,
+    "genre": "Action",
+    "director": "Rob Cohen"
   }
 ]

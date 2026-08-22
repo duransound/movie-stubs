@@ -255,5 +255,11 @@
     "year": 2026,
     "genre": "Action",
     "director": "Jorma Taccone"
+  },
+  {
+    "title": "Obsession",
+    "year": 2026,
+    "genre": "Horror",
+    "director": "Curry Barker"
   }
 ]

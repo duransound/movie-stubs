@@ -261,5 +261,11 @@
     "year": 2026,
     "genre": "Horror",
     "director": "Curry Barker"
+  },
+  {
+    "title": "Heat",
+    "year": 1995,
+    "genre": "Action",
+    "director": "Michael Mann"
   }
 ]

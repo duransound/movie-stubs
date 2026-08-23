@@ -267,5 +267,11 @@
     "year": 1995,
     "genre": "Action",
     "director": "Michael Mann"
+  },
+  {
+    "title": "Anora",
+    "year": 2024,
+    "genre": "Comedy",
+    "director": "Sean Baker"
   }
 ]

@@ -279,5 +279,11 @@
     "year": 2023,
     "genre": "Comedy",
     "director": "Matthew Goodhue"
+  },
+  {
+    "title": "Steel Magnolias",
+    "year": 1989,
+    "genre": "Comedy",
+    "director": "Herbert Ross"
   }
 ]

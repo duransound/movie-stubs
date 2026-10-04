@@ -321,5 +321,11 @@
     "year": 1931,
     "genre": "Comedy",
     "director": "Lewis Milestone"
+  },
+  {
+    "title": "Arsenic and Old Lace",
+    "year": 1944,
+    "genre": "Comedy",
+    "director": "Frank Capra"
   }
 ]

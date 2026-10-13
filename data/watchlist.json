@@ -333,5 +333,11 @@
     "year": 1940,
     "genre": "Comedy",
     "director": "George Cukor"
+  },
+  {
+    "title": "House of Wax",
+    "year": 1953,
+    "genre": "Horror",
+    "director": "André De Toth"
   }
 ]
